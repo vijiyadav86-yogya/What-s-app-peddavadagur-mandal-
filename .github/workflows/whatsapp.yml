@@ -8,31 +8,43 @@ jobs:
   send_whatsapp:
     runs-on: ubuntu-latest
     steps:
-      - name: Send WhatsApp Message
+      - name: Send WhatsApp Message or Document
         run: |
           python3 -c "
           import urllib.request, json
 
-          raw_phone = '${{ github.event.client_payload.phone }}'.strip().replace('+', '').replace(' ', '')
-          if not raw_phone.startswith('91') and len(raw_phone) == 10:
-              phone = '91' + raw_phone
-          else:
-              phone = raw_phone
+          raw = '${{ github.event.client_payload.phone }}'.strip().replace('+', '').replace(' ', '')
+          phone = '91' + raw if len(raw) == 10 else raw
 
           msg = '''${{ github.event.client_payload.message }}'''
+          file_url = '${{ github.event.client_payload.file_url }}'.strip()
 
           url = 'https://graph.facebook.com/v19.0/1290612987479644/messages'
           headers = {
               'Authorization': 'Bearer ${{ secrets.WHATSAPP_TOKEN }}',
               'Content-Type': 'application/json'
           }
-          data = {
-              'messaging_product': 'whatsapp',
-              'recipient_type': 'individual',
-              'to': phone,
-              'type': 'text',
-              'text': {'body': msg}
-          }
+
+          if file_url and file_url.startswith('http'):
+              data = {
+                  'messaging_product': 'whatsapp',
+                  'recipient_type': 'individual',
+                  'to': phone,
+                  'type': 'document',
+                  'document': {
+                      'link': file_url,
+                      'caption': msg,
+                      'filename': 'Notice.pdf'
+                  }
+              }
+          else:
+              data = {
+                  'messaging_product': 'whatsapp',
+                  'recipient_type': 'individual',
+                  'to': phone,
+                  'type': 'text',
+                  'text': {'body': msg}
+              }
 
           req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)
           try:
@@ -42,4 +54,3 @@ jobs:
               print(e.read().decode())
               exit(1)
           "
-          

@@ -14,12 +14,11 @@
       --card-bg: #ffffff;
       --text: #1e293b;
       --border: #cbd5e1;
-      --success: #10b981;
+      --success: #16a34a;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
     body { background-color: var(--bg); color: var(--text); padding-bottom: 50px; }
     
-    /* Header Banner */
     .header-banner {
       background: linear-gradient(135deg, #2d3bb4, #3b4cca);
       color: white;
@@ -40,7 +39,6 @@
     .header-titles h1 { font-size: 1.25rem; font-weight: 700; margin-bottom: 4px; }
     .header-titles p { font-size: 0.85rem; opacity: 0.9; }
 
-    /* Container Card */
     .form-card {
       background: var(--card-bg);
       margin: 15px;
@@ -69,7 +67,6 @@
       cursor: pointer;
     }
 
-    /* Form Fields */
     .form-group { margin-bottom: 16px; }
     .form-label {
       display: block;
@@ -80,7 +77,6 @@
     }
     .required { color: #ef4444; }
 
-    /* Yellow Box for Category */
     .category-box {
       border: 2px solid #facc15;
       background: #fefce8;
@@ -105,14 +101,12 @@
       border-radius: 12px;
       font-size: 0.95rem;
       outline: none;
-      transition: all 0.2s;
     }
     .form-control:focus, .form-select:focus {
       border-color: var(--primary);
       box-shadow: 0 0 0 3px rgba(45, 59, 180, 0.15);
     }
 
-    /* Phone Input Box */
     .phone-input-group {
       display: flex;
       border: 1.5px solid var(--border);
@@ -134,7 +128,6 @@
       font-size: 0.95rem;
     }
 
-    /* Attachments Box */
     .attachment-box {
       background: #f8fafc;
       border: 1.5px solid #e2e8f0;
@@ -170,7 +163,6 @@
     .btn-pdf { background: #4338ca; }
     .btn-attach i { font-size: 1.4rem; }
 
-    /* Date & Due Days */
     .date-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -182,7 +174,6 @@
       margin-bottom: 20px;
     }
 
-    /* Main WhatsApp Action Button */
     .btn-send {
       width: 100%;
       background: linear-gradient(135deg, #16a34a, #15803d);
@@ -200,23 +191,11 @@
       cursor: pointer;
     }
     .btn-send:active { transform: scale(0.98); }
-
-    /* Status Alert */
-    #statusAlert {
-      margin-top: 15px;
-      padding: 12px;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      display: none;
-      text-align: center;
-    }
-    .alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
-    .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+    #selectedFileNotice { font-size: 0.85rem; color: #166534; margin-top: 8px; font-weight: 600; display: none; }
   </style>
 </head>
 <body>
 
-  <!-- Top Blue Header Banner -->
   <div class="header-banner">
     <i class="bi bi-bank2 header-icon"></i>
     <div class="header-titles">
@@ -225,23 +204,21 @@
     </div>
   </div>
 
-  <!-- Form Container -->
   <div class="form-card">
     <div class="card-head">
       <h2>కొత్త ఎంట్రీ & నోటీస్</h2>
-      <button class="btn-contacts" type="button" onclick="alert('కాంటాక్ట్ లిస్ట్ త్వరలో అందుబాటులోకి వస్తుంది')">
+      <button class="btn-contacts" type="button" onclick="pickContact()">
         <i class="bi bi-person-lines-fill"></i> కాంటాక్ట్స్
       </button>
     </div>
 
-    <!-- Category Box -->
     <div class="category-box">
       <div class="category-title">
         <i class="bi bi-list-task"></i> విభాగం ఎంచుకోండి (Category) <span class="required">*</span>
       </div>
       <select class="form-select" id="categorySelect">
         <option value="">-- ఎంచుకోండి (Select Category) --</option>
-        <option value="మ్యుటేషన్ / పట్టాదారు పాస్ పుస్తకం">మ్యుటేషన్ / పట్టాదారు పాస్ పుస్తకం</option>
+        <option value="మ్యుటేషన్ / పట్టాదారు పాస్ పుస్తకం" selected>మ్యుటేషన్ / పట్టాదారు పాస్ పుస్తకం</option>
         <option value="స్పందన / పీపుల్స్ గ్రీవెన్స్ అర్జీ">స్పందన / పీపుల్స్ గ్రీవెన్స్ అర్జీ</option>
         <option value="సర్వే / సరిహద్దుల వివాదం">సర్వే / సరిహద్దుల వివాదం</option>
         <option value="భూ సేకరణ / అవార్డు విచారణ">భూ సేకరణ / అవార్డు విచారణ</option>
@@ -249,13 +226,11 @@
       </select>
     </div>
 
-    <!-- Recipient Name -->
     <div class="form-group">
       <label class="form-label">గ్రహీత పేరు (VRO / Person) <span class="required">*</span></label>
       <input type="text" class="form-control" id="personName" placeholder="ఉదా: రాజేష్" value="రాజేష్">
     </div>
 
-    <!-- WhatsApp Number -->
     <div class="form-group">
       <label class="form-label">WhatsApp నంబర్ <span class="required">*</span></label>
       <div class="phone-input-group">
@@ -264,28 +239,26 @@
       </div>
     </div>
 
-    <!-- Document Reference Number -->
     <div class="form-group">
       <label class="form-label">డాక్యుమెంట్ / రిఫరెన్స్ నంబర్ <span class="required">*</span></label>
       <input type="text" class="form-control" id="refNumber" placeholder="ఉదా: F-8 నంబర్ / అర్జీ వివరాలు" value="F-8/2026/నోటీస్-12">
     </div>
 
-    <!-- File Attachments Box -->
     <div class="attachment-box">
       <div class="attachment-title">📸 డాక్యుమెంట్ ఫోటో లేదా PDF జతచేయండి:</div>
       <div class="attachment-grid">
         <label class="btn-attach btn-camera">
           <i class="bi bi-camera"></i> కెమెరా ఓపెన్ చేయి
-          <input type="file" accept="image/*" capture="environment" style="display: none;" onchange="alert('ఫోటో సెలెక్ట్ చేయబడింది!')">
+          <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;" onchange="fileSelected(this)">
         </label>
         <label class="btn-attach btn-pdf">
           <i class="bi bi-file-earmark-pdf"></i> PDF / ఫైల్స్
-          <input type="file" accept="application/pdf,image/*" style="display: none;" onchange="alert('ఫైల్ సెలెక్ట్ చేయబడింది!')">
+          <input type="file" id="docInput" accept="application/pdf,image/*" style="display: none;" onchange="fileSelected(this)">
         </label>
       </div>
+      <div id="selectedFileNotice"></div>
     </div>
 
-    <!-- Days & Due Date -->
     <div class="date-row">
       <div>
         <label class="form-label">గడువు రోజులు</label>
@@ -302,16 +275,12 @@
       </div>
     </div>
 
-    <!-- Submit Action Button -->
     <button class="btn-send" id="sendBtn" onclick="sendWhatsAppNotice()">
       <i class="bi bi-whatsapp"></i> వాట్సాప్‌కు నోటీస్ పంపు
     </button>
-
-    <div id="statusAlert"></div>
   </div>
 
   <script>
-    // సెట్ ప్రస్తుత గడువు తేదీ
     function updateDueDate() {
       const days = parseInt(document.getElementById('dueDays').value) || 7;
       const today = new Date();
@@ -323,19 +292,49 @@
     }
     updateDueDate();
 
-    // GitHub Actions API మీదుగా వాట్సాప్ పంపే ఫంక్షన్
-    async function sendWhatsAppNotice() {
+    function fileSelected(input) {
+      if (input.files && input.files[0]) {
+        const notice = document.getElementById('selectedFileNotice');
+        notice.style.display = 'block';
+        notice.innerText = `📎 జతచేయబడిన ఫైల్: ${input.files[0].name}`;
+      }
+    }
+
+    async function pickContact() {
+      if ('contacts' in navigator && 'ContactsManager' in window) {
+        try {
+          const props = ['name', 'tel'];
+          const contacts = await navigator.contacts.select(props, { multiple: false });
+          if (contacts.length > 0) {
+            if (contacts[0].name && contacts[0].name[0]) {
+              document.getElementById('personName').value = contacts[0].name[0];
+            }
+            if (contacts[0].tel && contacts[0].tel[0]) {
+              let clean = contacts[0].tel[0].replace(/[^0-9]/g, '');
+              if (clean.length > 10) clean = clean.slice(-10);
+              document.getElementById('phoneNumber').value = clean;
+            }
+          }
+        } catch (err) {}
+      } else {
+        alert("మీ బ్రౌజర్ నేరుగా ఫోన్ కాంటాక్ట్స్ యాక్సెస్ చేయడానికి అనుమతించదు. దయచేసి నంబర్‌ను నేరుగా టైప్ చేయండి.");
+      }
+    }
+
+    function sendWhatsAppNotice() {
       const category = document.getElementById('categorySelect').value;
       const name = document.getElementById('personName').value.trim();
-      const phone = document.getElementById('phoneNumber').value.trim();
+      let phone = document.getElementById('phoneNumber').value.trim().replace(/[^0-9]/g, '');
       const ref = document.getElementById('refNumber').value.trim();
       const dueDate = document.getElementById('dueDate').value;
-      const sendBtn = document.getElementById('sendBtn');
-      const alertBox = document.getElementById('statusAlert');
 
       if (!name || !phone || !ref) {
         alert("దయచేసి అన్ని వివరాలను నమోదు చేయండి!");
         return;
+      }
+
+      if (phone.length === 10) {
+        phone = '91' + phone;
       }
 
       const noticeMessage = `🏛️ *తహసీల్దార్ కార్యాలయం, పెద్దవడుగూరు*\n` +
@@ -347,41 +346,8 @@
         `📅 *పరిష్కార గడువు తేదీ:* ${dueDate}\n\n` +
         `⚠️ *గమనిక:* నిర్ణీత గడువులోగా తగిన నివేదికను కార్యాలయంలో సమర్పించవలసిందిగా ఆదేశించడమైనది.`;
 
-      sendBtn.disabled = true;
-      sendBtn.innerHTML = '<i class="bi bi-hourglass-split"></i> పంపుతున్నాము...';
-      alertBox.style.display = 'none';
-
-      try {
-        const response = await fetch('https://api.github.com/repos/vijiyadav86-yogya/What-s-app-peddavadagur-mandal-/dispatches', {
-          method: 'POST',
-          headers: {
-            'Accept': 'application/vnd.github.v3+json',
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify({
-            event_type: 'send_notice',
-            client_payload: {
-              phone: phone,
-              message: noticeMessage
-            }
-          })
-        });
-
-        if (response.ok || response.status === 204) {
-          alertBox.className = 'alert-success';
-          alertBox.innerHTML = '✅ నోటీస్ విజయవంతంగా వాట్సాప్‌కు పంపబడింది!';
-          alertBox.style.display = 'block';
-        } else {
-          throw new Error('API dispatch failed');
-        }
-      } catch (err) {
-        alertBox.className = 'alert-error';
-        alertBox.innerHTML = '⚠️ మెసేజ్ ట్రిగ్గర్ చేయబడింది! వర్క్‌ఫ్లో బ్యాక్‌గ్రౌండ్‌లో రన్ అవుతోంది.';
-        alertBox.style.display = 'block';
-      } finally {
-        sendBtn.disabled = false;
-        sendBtn.innerHTML = '<i class="bi bi-whatsapp"></i> వాట్సాప్‌కు నోటీస్ పంపు';
-      }
+      const encodedMsg = encodeURIComponent(noticeMessage);
+      window.location.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMsg}`;
     }
   </script>
 </body>

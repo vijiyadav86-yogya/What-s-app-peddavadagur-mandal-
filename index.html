@@ -313,6 +313,24 @@
       }
     }
 
+    async function uploadDocument(file) {
+      const formData = new FormData();
+      formData.append('reqtype', 'fileupload');
+      formData.append('fileToUpload', file);
+      try {
+        const res = await fetch('https://catbox.moe/user/api.php', {
+          method: 'POST',
+          body: formData
+        });
+        if (res.ok) {
+          return await res.text();
+        }
+      } catch (e) {
+        console.error("Catbox upload failed", e);
+      }
+      return null;
+    }
+
     async function pickContact() {
       if ('contacts' in navigator && 'ContactsManager' in window) {
         try {
@@ -330,7 +348,7 @@
           }
         } catch (err) {}
       } else {
-        alert("మీ బ్రౌజర్ నేరుగా కాంటాక్ట్స్ యాక్సెస్ చేయడానికి అనుమతించదు. దయచేసి నంబర్‌ను టైప్ చేయండి.");
+        alert("దయచేసి నంబర్‌ను నేరుగా టైప్ చేయండి.");
       }
     }
 
@@ -340,6 +358,7 @@
       let phone = document.getElementById('phoneNumber').value.trim().replace(/[^0-9]/g, '');
       const ref = document.getElementById('refNumber').value.trim();
       const dueDate = document.getElementById('dueDate').value;
+      const btn = document.getElementById('sendBtn');
 
       if (!name || !phone || !ref) {
         alert("దయచేసి అన్ని వివరాలను నమోదు చేయండి!");
@@ -350,30 +369,29 @@
         phone = '91' + phone;
       }
 
+      let fileLinkText = "";
+      if (currentSelectedFile) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="bi bi-hourglass-split"></i> డాక్యుమెంట్ అప్‌లోడ్ అవుతోంది...';
+        const fileUrl = await uploadDocument(currentSelectedFile);
+        if (fileUrl && fileUrl.startsWith('http')) {
+          fileLinkText = `\n📄 *జతచేసిన డాక్యుమెంట్ (PDF/Photo):*\n🔗 ${fileUrl.trim()}\n`;
+        }
+      }
+
       const noticeMessage = `🏛️ *తహసీల్దార్ కార్యాలయం, పెద్దవడుగూరు*\n` +
         `━━━━━━━━━━━━━━━━━━━━\n` +
         `📌 *అధికారిక నోటీస్ & ఆదేశాలు*\n\n` +
         `👤 *గ్రహీత:* ${name}\n` +
         `📂 *విభాగం:* ${category || 'సాధారణ రెవెన్యూ'}\n` +
         `📄 *రిఫరెన్స్ నంబర్:* ${ref}\n` +
-        `📅 *పరిష్కార గడువు తేదీ:* ${dueDate}\n\n` +
-        `⚠️ *గమనిక:* నిర్ణీత గడువులోగా తగిన నివేదికను కార్యాలయంలో సమర్పించవలసిందిగా ఆదేశించడమైనది.`;
+        `📅 *పరిష్కార గడువు తేదీ:* ${dueDate}\n` +
+        fileLinkText +
+        `\n⚠️ *గమనిక:* నిర్ణీత గడువులోగా తగిన నివేదికను కార్యాలయంలో సమర్పించవలసిందిగా ఆదేశించడమైనది.`;
 
-      // ఫైల్ ఉన్నప్పుడు మొబైల్ నేటివ్ షేరింగ్ (WhatsApp ఎంచుకోవచ్చు)
-      if (currentSelectedFile && navigator.canShare && navigator.canShare({ files: [currentSelectedFile] })) {
-        try {
-          await navigator.share({
-            files: [currentSelectedFile],
-            title: 'తహసీల్దార్ కార్యాలయ నోటీస్',
-            text: noticeMessage
-          });
-          return;
-        } catch (err) {
-          if (err.name === 'AbortError') return; // యూజర్ క్యాన్సిల్ చేస్తే
-        }
-      }
+      btn.disabled = false;
+      btn.innerHTML = '<i class="bi bi-whatsapp"></i> వాట్సాప్‌కు నోటీస్ పంపు';
 
-      // ఫైల్ లేనప్పుడు డైరెక్ట్ WhatsApp చాట్ లింక్
       const encodedMsg = encodeURIComponent(noticeMessage);
       window.location.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMsg}`;
     }

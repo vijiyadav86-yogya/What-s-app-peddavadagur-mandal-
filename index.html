@@ -8,13 +8,11 @@
   <style>
     :root {
       --primary: #2d3bb4;
-      --primary-dark: #1f2a8a;
       --accent: #f59e0b;
       --bg: #f1f5f9;
       --card-bg: #ffffff;
       --text: #1e293b;
       --border: #cbd5e1;
-      --success: #16a34a;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
     body { background-color: var(--bg); color: var(--text); padding-bottom: 50px; }
@@ -53,19 +51,6 @@
       margin-bottom: 18px;
     }
     .card-head h2 { font-size: 1.15rem; font-weight: 700; color: #1e293b; }
-    .btn-contacts {
-      background: #e0e7ff;
-      color: #3730a3;
-      border: none;
-      padding: 7px 14px;
-      border-radius: 10px;
-      font-weight: 600;
-      font-size: 0.85rem;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      cursor: pointer;
-    }
 
     .form-group { margin-bottom: 16px; }
     .form-label {
@@ -101,10 +86,6 @@
       border-radius: 12px;
       font-size: 0.95rem;
       outline: none;
-    }
-    .form-control:focus, .form-select:focus {
-      border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(45, 59, 180, 0.15);
     }
 
     .phone-input-group {
@@ -188,20 +169,22 @@
       align-items: center;
       justify-content: center;
       gap: 10px;
-      box-shadow: 0 8px 20px -4px rgba(22, 163, 74, 0.4);
       cursor: pointer;
     }
-    .btn-send:active { transform: scale(0.98); }
-    #selectedFileNotice {
-      font-size: 0.85rem;
-      color: #166534;
-      margin-top: 10px;
+    .btn-send:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    #statusAlert {
+      margin-top: 15px;
+      padding: 14px;
+      border-radius: 12px;
+      font-size: 0.95rem;
       font-weight: 600;
-      background: #dcfce7;
-      padding: 8px 12px;
-      border-radius: 8px;
       display: none;
+      text-align: center;
     }
+    .alert-success { background: #dcfce7; color: #166534; border: 1px solid #bbf7d0; }
+    .alert-error { background: #fee2e2; color: #991b1b; border: 1px solid #fecaca; }
+    #selectedFileNotice { font-size: 0.85rem; color: #166534; margin-top: 8px; font-weight: 600; display: none; }
   </style>
 </head>
 <body>
@@ -216,10 +199,19 @@
 
   <div class="form-card">
     <div class="card-head">
-      <h2>కొత్త ఎంట్రీ & నోటీస్</h2>
-      <button class="btn-contacts" type="button" onclick="pickContact()">
-        <i class="bi bi-person-lines-fill"></i> కాంటాక్ట్స్
-      </button>
+      <h2>కొత్త ఎంట్రీ & డైరెక్ట్ నోటీస్</h2>
+    </div>
+
+    <!-- Quick Contact / VRO Select -->
+    <div class="form-group">
+      <label class="form-label"><i class="bi bi-people-fill"></i> త్వరిత ఎంపిక (VRO / సెక్రటరీ)</label>
+      <select class="form-select" id="quickContact" onchange="autoFillContact(this)">
+        <option value="">-- కాంటాక్ట్ ఎంచుకోండి (ఐచ్ఛికం) --</option>
+        <option value="8688421131|రాజేష్ (పెద్దవడుగూరు)">పెద్దవడుగూరు - రాజేష్ (8688421131)</option>
+        <option value="8688421131|లక్ష్మీనారాయణ (చిన్నవడుగూరు)">చిన్నవడుగూరు - లక్ష్మీనారాయణ</option>
+        <option value="8688421131|సురేష్ (మిడుతూరు)">మిడుతూరు - సురేష్</option>
+        <option value="8688421131|నాగేంద్ర (కసవాపురం)">కసవాపురం - నాగేంద్ర</option>
+      </select>
     </div>
 
     <div class="category-box">
@@ -285,13 +277,22 @@
       </div>
     </div>
 
-    <button class="btn-send" id="sendBtn" onclick="sendWhatsAppNotice()">
-      <i class="bi bi-whatsapp"></i> వాట్సాప్‌కు నోటీస్ పంపు
+    <button class="btn-send" id="sendBtn" onclick="sendWhatsAppNoticeDirect()">
+      <i class="bi bi-send-fill"></i> వాట్సాప్‌కు డైరెక్ట్‌గా పంపు (No App Open)
     </button>
+
+    <div id="statusAlert"></div>
   </div>
 
   <script>
     let currentSelectedFile = null;
+
+    function autoFillContact(sel) {
+      if (!sel.value) return;
+      const parts = sel.value.split('|');
+      document.getElementById('phoneNumber').value = parts[0];
+      document.getElementById('personName').value = parts[1];
+    }
 
     function updateDueDate() {
       const days = parseInt(document.getElementById('dueDays').value) || 7;
@@ -309,7 +310,7 @@
         currentSelectedFile = input.files[0];
         const notice = document.getElementById('selectedFileNotice');
         notice.style.display = 'block';
-        notice.innerHTML = `📎 <b>జతచేయబడిన ఫైల్:</b> ${currentSelectedFile.name} (${(currentSelectedFile.size / 1024).toFixed(1)} KB)`;
+        notice.innerHTML = `📎 <b>జతచేయబడిన ఫైల్:</b> ${currentSelectedFile.name}`;
       }
     }
 
@@ -318,64 +319,38 @@
       formData.append('reqtype', 'fileupload');
       formData.append('fileToUpload', file);
       try {
-        const res = await fetch('https://catbox.moe/user/api.php', {
-          method: 'POST',
-          body: formData
-        });
-        if (res.ok) {
-          return await res.text();
-        }
-      } catch (e) {
-        console.error("Catbox upload failed", e);
-      }
+        const res = await fetch('https://catbox.moe/user/api.php', { method: 'POST', body: formData });
+        if (res.ok) return await res.text();
+      } catch (e) {}
       return null;
     }
 
-    async function pickContact() {
-      if ('contacts' in navigator && 'ContactsManager' in window) {
-        try {
-          const props = ['name', 'tel'];
-          const contacts = await navigator.contacts.select(props, { multiple: false });
-          if (contacts.length > 0) {
-            if (contacts[0].name && contacts[0].name[0]) {
-              document.getElementById('personName').value = contacts[0].name[0];
-            }
-            if (contacts[0].tel && contacts[0].tel[0]) {
-              let clean = contacts[0].tel[0].replace(/[^0-9]/g, '');
-              if (clean.length > 10) clean = clean.slice(-10);
-              document.getElementById('phoneNumber').value = clean;
-            }
-          }
-        } catch (err) {}
-      } else {
-        alert("దయచేసి నంబర్‌ను నేరుగా టైప్ చేయండి.");
-      }
-    }
-
-    async function sendWhatsAppNotice() {
+    async function sendWhatsAppNoticeDirect() {
       const category = document.getElementById('categorySelect').value;
       const name = document.getElementById('personName').value.trim();
       let phone = document.getElementById('phoneNumber').value.trim().replace(/[^0-9]/g, '');
       const ref = document.getElementById('refNumber').value.trim();
       const dueDate = document.getElementById('dueDate').value;
       const btn = document.getElementById('sendBtn');
+      const alertBox = document.getElementById('statusAlert');
 
       if (!name || !phone || !ref) {
         alert("దయచేసి అన్ని వివరాలను నమోదు చేయండి!");
         return;
       }
 
-      if (phone.length === 10) {
-        phone = '91' + phone;
-      }
+      if (phone.length === 10) phone = '91' + phone;
 
-      let fileLinkText = "";
+      btn.disabled = true;
+      btn.innerHTML = '<i class="bi bi-hourglass-split"></i> ప్రాసెస్ అవుతోంది...';
+      alertBox.style.display = 'none';
+
+      let fileUrl = "";
       if (currentSelectedFile) {
-        btn.disabled = true;
-        btn.innerHTML = '<i class="bi bi-hourglass-split"></i> డాక్యుమెంట్ అప్‌లోడ్ అవుతోంది...';
-        const fileUrl = await uploadDocument(currentSelectedFile);
-        if (fileUrl && fileUrl.startsWith('http')) {
-          fileLinkText = `\n📄 *జతచేసిన డాక్యుమెంట్ (PDF/Photo):*\n🔗 ${fileUrl.trim()}\n`;
+        btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> డాక్యుమెంట్ అప్‌లోడ్ అవుతోంది...';
+        const uploaded = await uploadDocument(currentSelectedFile);
+        if (uploaded && uploaded.startsWith('http')) {
+          fileUrl = uploaded.trim();
         }
       }
 
@@ -385,15 +360,46 @@
         `👤 *గ్రహీత:* ${name}\n` +
         `📂 *విభాగం:* ${category || 'సాధారణ రెవెన్యూ'}\n` +
         `📄 *రిఫరెన్స్ నంబర్:* ${ref}\n` +
-        `📅 *పరిష్కార గడువు తేదీ:* ${dueDate}\n` +
-        fileLinkText +
-        `\n⚠️ *గమనిక:* నిర్ణీత గడువులోగా తగిన నివేదికను కార్యాలయంలో సమర్పించవలసిందిగా ఆదేశించడమైనది.`;
+        `📅 *పరిష్కార గడువు తేదీ:* ${dueDate}\n\n` +
+        `⚠️ *గమనిక:* నిర్ణీత గడువులోగా తగిన నివేదికను కార్యాలయంలో సమర్పించవలసిందిగా ఆదేశించడమైనది.`;
 
-      btn.disabled = false;
-      btn.innerHTML = '<i class="bi bi-whatsapp"></i> వాట్సాప్‌కు నోటీస్ పంపు';
+      btn.innerHTML = '<i class="bi bi-send"></i> వాట్సాప్‌కు పంపుతున్నాము...';
 
-      const encodedMsg = encodeURIComponent(noticeMessage);
-      window.location.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMsg}`;
+      const GH_TOKEN = "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";
+
+      try {
+        const response = await fetch('https://api.github.com/repos/vijiyadav86-yogya/What-s-app-peddavadagur-mandal-/dispatches', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/vnd.github.v3+json',
+            'Authorization': `Bearer ${GH_TOKEN}`,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            event_type: 'send_notice',
+            client_payload: {
+              phone: phone,
+              message: noticeMessage,
+              file_url: fileUrl
+            }
+          })
+        });
+
+        if (response.status === 204 || response.ok) {
+          alertBox.className = 'alert-success';
+          alertBox.innerHTML = '✅ వాట్సాప్‌కు నేరుగా డాక్యుమెంట్ పంపబడింది!';
+          alertBox.style.display = 'block';
+        } else {
+          throw new Error('API Error');
+        }
+      } catch (err) {
+        alertBox.className = 'alert-error';
+        alertBox.innerHTML = '❌ పంపడం విఫలమైంది. దయచేసి మళ్లీ ప్రయత్నించండి.';
+        alertBox.style.display = 'block';
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="bi bi-send-fill"></i> వాట్సాప్‌కు డైరెక్ట్‌గా పంపు (No App Open)';
+      }
     }
   </script>
 </body>

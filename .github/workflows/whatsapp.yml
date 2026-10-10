@@ -13,6 +13,14 @@ jobs:
           python3 -c "
           import urllib.request, json
 
+          raw_phone = '${{ github.event.client_payload.phone }}'.strip().replace('+', '').replace(' ', '')
+          if not raw_phone.startswith('91') and len(raw_phone) == 10:
+              phone = '91' + raw_phone
+          else:
+              phone = raw_phone
+
+          msg = '''${{ github.event.client_payload.message }}'''
+
           url = 'https://graph.facebook.com/v19.0/1290612987479644/messages'
           headers = {
               'Authorization': 'Bearer ${{ secrets.WHATSAPP_TOKEN }}',
@@ -21,9 +29,9 @@ jobs:
           data = {
               'messaging_product': 'whatsapp',
               'recipient_type': 'individual',
-              'to': '${{ github.event.client_payload.phone }}',
+              'to': phone,
               'type': 'text',
-              'text': {'body': '''${{ github.event.client_payload.message }}'''}
+              'text': {'body': msg}
           }
 
           req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)

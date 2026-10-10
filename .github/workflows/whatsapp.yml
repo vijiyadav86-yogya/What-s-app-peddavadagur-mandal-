@@ -19,6 +19,8 @@ jobs:
           else:
               phone = raw_phone
 
+          msg = '''${{ github.event.client_payload.message }}'''
+
           url = 'https://graph.facebook.com/v19.0/1290612987479644/messages'
           headers = {
               'Authorization': 'Bearer ${{ secrets.WHATSAPP_TOKEN }}',
@@ -26,12 +28,10 @@ jobs:
           }
           data = {
               'messaging_product': 'whatsapp',
+              'recipient_type': 'individual',
               'to': phone,
-              'type': 'template',
-              'template': {
-                  'name': 'hello_world',
-                  'language': { 'code': 'en_US' }
-              }
+              'type': 'text',
+              'text': {'body': msg}
           }
 
           req = urllib.request.Request(url, data=json.dumps(data).encode('utf-8'), headers=headers)

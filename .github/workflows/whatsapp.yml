@@ -1,0 +1,28 @@
+name: Send WhatsApp Notice
+
+on:
+  repository_dispatch:
+    types: [send_notice]
+
+jobs:
+  send_whatsapp:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send Message via WhatsApp Cloud API
+        env:
+          WHATSAPP_TOKEN: ${{ secrets.WHATSAPP_TOKEN }}
+          PHONE_ID: ${{ secrets.WHATSAPP_PHONE_ID }}
+          RECIPIENT_PHONE: ${{ github.event.client_payload.phone }}
+          MESSAGE_TEXT: ${{ github.event.client_payload.message }}
+        run: |
+          curl -X POST "https://graph.facebook.com/v19.0/${PHONE_ID}/messages" \
+            -H "Authorization: Bearer ${WHATSAPP_TOKEN}" \
+            -H "Content-Type: application/json" \
+            -d '{
+              "messaging_product": "whatsapp",
+              "recipient_type": "individual",
+              "to": "'"${RECIPIENT_PHONE}"'",
+              "type": "text",
+              "text": { "body": "'"${MESSAGE_TEXT}"'" }
+            }'
+            

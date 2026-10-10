@@ -55,7 +55,7 @@
     .btn-contacts {
       background: #e0e7ff;
       color: #3730a3;
-      border: 1px solid #c7d2fe;
+      border: 1.5px solid #c7d2fe;
       padding: 8px 16px;
       border-radius: 12px;
       font-weight: 700;
@@ -215,7 +215,7 @@
   <div class="form-card">
     <div class="card-head">
       <h2>కొత్త ఎంట్రీ & నోటీస్</h2>
-      <button class="btn-contacts" type="button" onclick="selectFromPhoneContacts()">
+      <button class="btn-contacts" type="button" onclick="selectFromChromeContacts()">
         <i class="bi bi-person-lines-fill"></i> కాంటాక్ట్స్
       </button>
     </div>
@@ -294,7 +294,8 @@
     let currentSelectedFile = null;
     const GH_TOKEN = "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";
 
-    async function selectFromPhoneContacts() {
+    // Android Google Chrome Native Contacts Picker
+    async function selectFromChromeContacts() {
       if ('contacts' in navigator && 'ContactsManager' in window) {
         try {
           const props = ['name', 'tel'];
@@ -309,9 +310,11 @@
               document.getElementById('phoneNumber').value = clean;
             }
           }
-        } catch (err) {}
+        } catch (err) {
+          console.log("Contacts cancelled");
+        }
       } else {
-        alert("Mee mobile browser contacts picker support cheyadam ledu. Dayachesi number direct ga type cheyandi.");
+        alert("Chrome లో కాంటాక్ట్స్ అనుమతి రాలేదు. దయచేసి నంబర్‌ను నేరుగా నమోదు చేయండి.");
       }
     }
 
@@ -335,21 +338,41 @@
       }
     }
 
-    async function uploadDocument(file) {
-      try {
-        const formData = new FormData();
-        formData.append('reqtype', 'fileupload');
-        formData.append('fileToUpload', file);
-        const res = await fetch('https://corsproxy.io/?url=https://catbox.moe/user/api.php', {
-          method: 'POST',
-          body: formData
-        });
-        if (res.ok) {
-          const url = await res.text();
-          if (url && url.startsWith('http')) return url.trim();
-        }
-      } catch (e) {}
-      return null;
+    // Direct GitHub Repo Upload to prevent CORS
+    async function uploadToGitHubDirect(file) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = async function() {
+          try {
+            const base64 = reader.result.split(',')[1];
+            const cleanName = Date.now() + "_" + file.name.replace(/[^a-zA-Z0-9._-]/g, '');
+            const path = `uploads/${cleanName}`;
+            
+            const res = await fetch(`https://api.github.com/repos/vijiyadav86-yogya/What-s-app-peddavadagur-mandal-/contents/${path}`, {
+              method: 'PUT',
+              headers: {
+                'Authorization': `Bearer ${GH_TOKEN}`,
+                'Content-Type': 'application/json',
+                'Accept': 'application/vnd.github.v3+json'
+              },
+              body: JSON.stringify({
+                message: `Upload notice file ${cleanName}`,
+                content: base64
+              })
+            });
+
+            if (res.ok) {
+              const fileRawUrl = `https://raw.githubusercontent.com/vijiyadav86-yogya/What-s-app-peddavadagur-mandal-/main/${path}`;
+              resolve(fileRawUrl);
+            } else {
+              resolve(null);
+            }
+          } catch (e) {
+            resolve(null);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
     }
 
     async function sendWhatsAppNoticeDirect() {
@@ -362,7 +385,7 @@
       const alertBox = document.getElementById('statusAlert');
 
       if (!name || !phone || !ref) {
-        alert("Dayachesi anni vivaralu enter cheyandi!");
+        alert("దయచేసి అన్ని వివరాలను నమోదు చేయండి!");
         return;
       }
 
@@ -375,7 +398,7 @@
       let fileUrl = "";
       if (currentSelectedFile) {
         btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> ఫైల్ అప్‌లోడ్ అవుతోంది...';
-        fileUrl = await uploadDocument(currentSelectedFile);
+        fileUrl = await uploadToGitHubDirect(currentSelectedFile);
       }
 
       const noticeMessage = `🏛️ *తహసీల్దార్ కార్యాలయం, పెద్దవడుగూరు*\n` +
@@ -410,7 +433,7 @@
 
         if (response.status === 204 || response.ok) {
           alertBox.className = 'alert-success';
-          alertBox.innerHTML = '✅ వాట్సాప్‌కు నేరుగా డాక్యుమెంట్ పంపబడింది!';
+          alertBox.innerHTML = '✅ వాట్సాప్‌కు నేరుగా ఫైల్ మరియు నోటీస్ పంపబడింది!';
           alertBox.style.display = 'block';
         } else {
           throw new Error('API Error');

@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="te">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tahsildar Office, Peddavaduguru - Direct Sender</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-slate-100 min-h-screen p-3 text-slate-800">
+
+  <div class="max-w-md mx-auto space-y-4">
+    
+    <!-- Header -->
+    <div class="bg-indigo-800 text-white p-5 rounded-2xl shadow border-b-4 border-amber-500">
+      <div class="flex items-center gap-2">
+        <i class="fas fa-landmark text-2xl text-amber-400"></i>
+        <div>
+          <h1 class="text-base font-bold">తహసీల్దార్ కార్యాలయం, పెద్దవడుగూరు</h1>
+          <p class="text-indigo-200 text-xs">ఆటోమేటిక్ వాట్సాప్ నోటీస్ సిస్టమ్</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Form Box -->
+    <div class="bg-white p-5 rounded-2xl shadow border border-slate-200 space-y-3">
+      <h2 class="text-sm font-bold text-slate-700">డైరెక్ట్ నోటీస్ పంపండి</h2>
+
+      <!-- GitHub PAT Token -->
+      <div class="bg-amber-50 p-2.5 rounded-xl border border-amber-300">
+        <label class="block text-[11px] font-bold text-amber-900 mb-1">
+          🔑 GitHub Access Token (PAT) <span class="text-red-500">*</span>
+        </label>
+        <input type="password" id="ghToken" class="w-full border border-amber-300 rounded-lg p-2 text-xs bg-white outline-none" placeholder="ghp_xxxx..." onchange="savePatToken()">
+        <p class="text-[10px] text-amber-700 mt-1">* మొదటిసారి ఇస్తే బ్రౌజర్‌లో సేవ్ అవుతుంది.</p>
+      </div>
+
+      <!-- Category -->
+      <div>
+        <label class="block text-xs font-semibold mb-1 text-slate-600">విభాగం (Category)</label>
+        <select id="categorySelect" onchange="updateNoticeText()" class="w-full border rounded-xl p-2.5 text-xs font-bold text-slate-800 bg-white outline-none">
+          <option value="Mutations">1. Mutations (మ్యుటేషన్స్)</option>
+          <option value="PGRS">2. PGRS (ప్రజా సమస్యల పరిష్కార వేదిక)</option>
+          <option value="Mandala arjilu">3. Mandala arjilu (మండల అర్జీలు)</option>
+          <option value="Others">4. Others (ఇతరములు)</option>
+        </select>
+      </div>
+      
+      <div>
+        <label class="block text-xs font-semibold mb-1 text-slate-600">గ్రహీత పేరు (VRO / Person)</label>
+        <input type="text" id="name" oninput="updateNoticeText()" class="w-full border rounded-xl p-2.5 text-sm outline-none" placeholder="ఉదా: రాము">
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold mb-1 text-slate-600">మొబైల్ నంబర్ (10 అంకెలు)</label>
+        <div class="flex items-center border rounded-xl overflow-hidden bg-white">
+          <span class="bg-slate-100 text-slate-700 font-bold px-3 py-2 text-sm border-r">+91</span>
+          <input type="tel" id="phone" maxlength="10" class="w-full p-2 text-sm outline-none" placeholder="9876543210">
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold mb-1 text-slate-600">ఫైల్ / రిఫరెన్స్ నంబర్</label>
+        <input type="text" id="docName" oninput="updateNoticeText()" class="w-full border rounded-xl p-2.5 text-sm outline-none" placeholder="ఉదా: F-8 నంబర్ / ఆర్డర్ కాపీ">
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold mb-1 text-slate-600">PDF / డ్రైవ్ లింక్ (ఆప్షనల్)</label>
+        <input type="url" id="driveLink" oninput="updateNoticeText()" class="w-full border rounded-xl p-2.5 text-xs outline-none" placeholder="https://drive.google.com/...">
+      </div>
+
+      <!-- Preview -->
+      <div>
+        <label class="block text-xs font-semibold mb-1 text-slate-600">మెసేజ్ ప్రివ్యూ:</label>
+        <textarea id="customMsg" rows="6" class="w-full border rounded-xl p-2.5 text-xs text-slate-700 bg-slate-50 outline-none leading-relaxed" readonly></textarea>
+      </div>
+
+      <button type="button" id="sendBtn" onclick="sendDirectNotice()" class="w-full bg-emerald-600 hover:bg-emerald-700 active:bg-emerald-800 text-white font-bold py-3.5 rounded-xl text-sm shadow flex items-center justify-center gap-2">
+        <i class="fas fa-paper-plane"></i> వాట్సాప్‌కు డైరెక్ట్‌గా పంపు (No App Open)
+      </button>
+      <div id="statusMsg" class="hidden text-xs text-center font-bold p-2 rounded-lg"></div>
+    </div>
+
+  </div>
+
+  <script>
+    var repoOwner = "vijiyadav86-yogya";
+    var repoName = "What-s-app-peddavadagur-mandal-";
+
+    window.onload = function() {
+      var savedToken = localStorage.getItem('gh_pat_token');
+      if (savedToken) {
+        document.getElementById('ghToken').value = savedToken;
+      }
+      updateNoticeText();
+    };
+
+    function savePatToken() {
+      var t = document.getElementById('ghToken').value.trim();
+      if (t) localStorage.setItem('gh_pat_token', t);
+    }
+
+    function updateNoticeText() {
+      var cat = document.getElementById('categorySelect').value;
+      var name = document.getElementById('name').value.trim() || '[గ్రహీత పేరు]';
+      var doc = document.getElementById('docName').value.trim() || '[రిఫరెన్స్ వివరాలు]';
+      var link = document.getElementById('driveLink').value.trim();
+
+      var linkText = link ? '\n\n📄 డాక్యుమెంట్ లింక్: ' + link : '';
+
+      var text = 'తహసీల్దార్ కార్యాలయం, పెద్దవడుగూరు\n\n' +
+                 'నమస్కారం ' + name + ' గారు,\n' +
+                 'మీకు ' + doc + ' (' + cat + ') సంబంధించిన నోటీస్ పంపడమైనది.' +
+                 linkText + '\n\n' +
+                 'దయచేసి వెంటనే విచారించి నివేదిక ఇవ్వగలరు.\n\n' +
+                 'ఇట్లు,\nతహసీల్దార్ కార్యాలయం,\nపెద్దవడుగూరు.';
+
+      document.getElementById('customMsg').value = text;
+    }
+
+    async function sendDirectNotice() {
+      var token = document.getElementById('ghToken').value.trim();
+      var phone = document.getElementById('phone').value.trim();
+      var msg = document.getElementById('customMsg').value;
+      var btn = document.getElementById('sendBtn');
+      var status = document.getElementById('statusMsg');
+
+      if (!token) {
+        alert('దయచేసి GitHub Token (PAT) ఎంటర్ చేయండి!');
+        return;
+      }
+      if (phone.length !== 10) {
+        alert('దయచేసి సరైన 10 అంకెల మొబైల్ నంబర్ ఇవ్వండి!');
+        return;
+      }
+
+      savePatToken();
+
+      btn.disabled = true;
+      btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> పంపుతోంది...';
+      status.className = "text-xs text-center font-bold p-2 rounded-lg bg-blue-100 text-blue-800 block";
+      status.innerText = "GitHub Actions ద్వారా మెసేజ్ పంపుతోంది...";
+
+      try {
+        var res = await fetch('https://api.github.com/repos/' + repoOwner + '/' + repoName + '/dispatches', {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/vnd.github.v3+json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+            event_type: 'send_notice',
+            client_payload: {
+              phone: '91' + phone,
+              message: msg
+            }
+          })
+        });
+
+        if (res.ok) {
+          status.className = "text-xs text-center font-bold p-2 rounded-lg bg-emerald-100 text-emerald-800 block";
+          status.innerText = "✅ వాట్సాప్ మెసేజ్ విజయవంతంగా సెండ్ అయింది!";
+          document.getElementById('phone').value = '';
+          document.getElementById('name').value = '';
+          document.getElementById('docName').value = '';
+          document.getElementById('driveLink').value = '';
+        } else {
+          status.className = "text-xs text-center font-bold p-2 rounded-lg bg-red-100 text-red-800 block";
+          status.innerText = "❌ పంపడం విఫలమైంది. GitHub PAT Token సరైనదేనా చెక్ చేయండి.";
+        }
+      } catch (err) {
+        status.className = "text-xs text-center font-bold p-2 rounded-lg bg-red-100 text-red-800 block";
+        status.innerText = "❌ ఎర్రర్: ఇంటర్నెట్ లేదా నెట్‌వర్క్ సమస్య.";
+      }
+
+      btn.disabled = false;
+      btn.innerHTML = '<i class="fas fa-paper-plane"></i> వాట్సాప్‌కు డైరెక్ట్‌గా పంపు (No App Open)';
+    }
+  </script>
+</body>
+</html>

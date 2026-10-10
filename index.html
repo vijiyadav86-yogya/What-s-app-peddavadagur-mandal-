@@ -158,6 +158,7 @@
       font-weight: 600;
       font-size: 0.85rem;
       cursor: pointer;
+      text-align: center;
     }
     .btn-camera { background: #059669; }
     .btn-pdf { background: #4338ca; }
@@ -191,7 +192,16 @@
       cursor: pointer;
     }
     .btn-send:active { transform: scale(0.98); }
-    #selectedFileNotice { font-size: 0.85rem; color: #166534; margin-top: 8px; font-weight: 600; display: none; }
+    #selectedFileNotice {
+      font-size: 0.85rem;
+      color: #166534;
+      margin-top: 10px;
+      font-weight: 600;
+      background: #dcfce7;
+      padding: 8px 12px;
+      border-radius: 8px;
+      display: none;
+    }
   </style>
 </head>
 <body>
@@ -249,11 +259,11 @@
       <div class="attachment-grid">
         <label class="btn-attach btn-camera">
           <i class="bi bi-camera"></i> కెమెరా ఓపెన్ చేయి
-          <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;" onchange="fileSelected(this)">
+          <input type="file" id="cameraInput" accept="image/*" capture="environment" style="display: none;" onchange="handleFile(this)">
         </label>
         <label class="btn-attach btn-pdf">
           <i class="bi bi-file-earmark-pdf"></i> PDF / ఫైల్స్
-          <input type="file" id="docInput" accept="application/pdf,image/*" style="display: none;" onchange="fileSelected(this)">
+          <input type="file" id="docInput" accept="application/pdf,image/*" style="display: none;" onchange="handleFile(this)">
         </label>
       </div>
       <div id="selectedFileNotice"></div>
@@ -281,6 +291,8 @@
   </div>
 
   <script>
+    let currentSelectedFile = null;
+
     function updateDueDate() {
       const days = parseInt(document.getElementById('dueDays').value) || 7;
       const today = new Date();
@@ -292,11 +304,12 @@
     }
     updateDueDate();
 
-    function fileSelected(input) {
+    function handleFile(input) {
       if (input.files && input.files[0]) {
+        currentSelectedFile = input.files[0];
         const notice = document.getElementById('selectedFileNotice');
         notice.style.display = 'block';
-        notice.innerText = `📎 జతచేయబడిన ఫైల్: ${input.files[0].name}`;
+        notice.innerHTML = `📎 <b>జతచేయబడిన ఫైల్:</b> ${currentSelectedFile.name} (${(currentSelectedFile.size / 1024).toFixed(1)} KB)`;
       }
     }
 
@@ -317,11 +330,11 @@
           }
         } catch (err) {}
       } else {
-        alert("మీ బ్రౌజర్ నేరుగా ఫోన్ కాంటాక్ట్స్ యాక్సెస్ చేయడానికి అనుమతించదు. దయచేసి నంబర్‌ను నేరుగా టైప్ చేయండి.");
+        alert("మీ బ్రౌజర్ నేరుగా కాంటాక్ట్స్ యాక్సెస్ చేయడానికి అనుమతించదు. దయచేసి నంబర్‌ను టైప్ చేయండి.");
       }
     }
 
-    function sendWhatsAppNotice() {
+    async function sendWhatsAppNotice() {
       const category = document.getElementById('categorySelect').value;
       const name = document.getElementById('personName').value.trim();
       let phone = document.getElementById('phoneNumber').value.trim().replace(/[^0-9]/g, '');
@@ -346,6 +359,21 @@
         `📅 *పరిష్కార గడువు తేదీ:* ${dueDate}\n\n` +
         `⚠️ *గమనిక:* నిర్ణీత గడువులోగా తగిన నివేదికను కార్యాలయంలో సమర్పించవలసిందిగా ఆదేశించడమైనది.`;
 
+      // ఫైల్ ఉన్నప్పుడు మొబైల్ నేటివ్ షేరింగ్ (WhatsApp ఎంచుకోవచ్చు)
+      if (currentSelectedFile && navigator.canShare && navigator.canShare({ files: [currentSelectedFile] })) {
+        try {
+          await navigator.share({
+            files: [currentSelectedFile],
+            title: 'తహసీల్దార్ కార్యాలయ నోటీస్',
+            text: noticeMessage
+          });
+          return;
+        } catch (err) {
+          if (err.name === 'AbortError') return; // యూజర్ క్యాన్సిల్ చేస్తే
+        }
+      }
+
+      // ఫైల్ లేనప్పుడు డైరెక్ట్ WhatsApp చాట్ లింక్
       const encodedMsg = encodeURIComponent(noticeMessage);
       window.location.href = `https://api.whatsapp.com/send?phone=${phone}&text=${encodedMsg}`;
     }

@@ -199,18 +199,18 @@
 
   <div class="form-card">
     <div class="card-head">
-      <h2>కొత్త ఎంట్రీ & డైరెక్ట్ నోటీస్</h2>
+      <h2>కొత్త ఎంట్రీ & నోటీస్</h2>
     </div>
 
-    <!-- Quick Contact / VRO Select -->
+    <!-- Quick Contact Select to Avoid Manual Search -->
     <div class="form-group">
-      <label class="form-label"><i class="bi bi-people-fill"></i> త్వరిత ఎంపిక (VRO / సెక్రటరీ)</label>
+      <label class="form-label"><i class="bi bi-person-badge"></i> VRO / గ్రామం త్వరిత ఎంపిక</label>
       <select class="form-select" id="quickContact" onchange="autoFillContact(this)">
-        <option value="">-- కాంటాక్ట్ ఎంచుకోండి (ఐచ్ఛికం) --</option>
-        <option value="8688421131|రాజేష్ (పెద్దవడుగూరు)">పెద్దవడుగూరు - రాజేష్ (8688421131)</option>
-        <option value="8688421131|లక్ష్మీనారాయణ (చిన్నవడుగూరు)">చిన్నవడుగూరు - లక్ష్మీనారాయణ</option>
-        <option value="8688421131|సురేష్ (మిడుతూరు)">మిడుతూరు - సురేష్</option>
-        <option value="8688421131|నాగేంద్ర (కసవాపురం)">కసవాపురం - నాగేంద్ర</option>
+        <option value="">-- కాంటాక్ట్ ఎంచుకోండి (Auto-fill) --</option>
+        <option value="8688421131|పెద్దవడుగూరు VRO">పెద్దవడుగూరు (8688421131)</option>
+        <option value="8688421131|చిన్నవడుగూరు VRO">చిన్నవడుగూరు</option>
+        <option value="8688421131|మిడుతూరు VRO">మిడుతూరు</option>
+        <option value="8688421131|కసవాపురం VRO">కసవాపురం</option>
       </select>
     </div>
 
@@ -230,7 +230,7 @@
 
     <div class="form-group">
       <label class="form-label">గ్రహీత పేరు (VRO / Person) <span class="required">*</span></label>
-      <input type="text" class="form-control" id="personName" placeholder="ఉదా: రాజేష్" value="రాజేష్">
+      <input type="text" class="form-control" id="personName" placeholder="ఉదా: రాజేష్" value="పెద్దవడుగూరు VRO">
     </div>
 
     <div class="form-group">
@@ -310,18 +310,27 @@
         currentSelectedFile = input.files[0];
         const notice = document.getElementById('selectedFileNotice');
         notice.style.display = 'block';
-        notice.innerHTML = `📎 <b>జతచేయబడిన ఫైల్:</b> ${currentSelectedFile.name}`;
+        notice.innerHTML = `📎 <b>జతచేయబడిన ఫైల్:</b> ${currentSelectedFile.name} (${(currentSelectedFile.size / 1024).toFixed(1)} KB)`;
       }
     }
 
+    // ఫైల్‌ను డైరెక్ట్ లింక్‌గా అప్‌లోడ్ చేసే ఫంక్షన్
     async function uploadDocument(file) {
-      const formData = new FormData();
-      formData.append('reqtype', 'fileupload');
-      formData.append('fileToUpload', file);
       try {
-        const res = await fetch('https://catbox.moe/user/api.php', { method: 'POST', body: formData });
-        if (res.ok) return await res.text();
-      } catch (e) {}
+        const formData = new FormData();
+        formData.append('file', file);
+        const res = await fetch('https://tmpfiles.org/api/v1/upload', {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        if (data && data.data && data.data.url) {
+          // Direct download link format
+          return data.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
+        }
+      } catch (e) {
+        console.error("Upload error:", e);
+      }
       return null;
     }
 
@@ -347,11 +356,8 @@
 
       let fileUrl = "";
       if (currentSelectedFile) {
-        btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> డాక్యుమెంట్ అప్‌లోడ్ అవుతోంది...';
-        const uploaded = await uploadDocument(currentSelectedFile);
-        if (uploaded && uploaded.startsWith('http')) {
-          fileUrl = uploaded.trim();
-        }
+        btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> PDF అప్‌లోడ్ అవుతోంది...';
+        fileUrl = await uploadDocument(currentSelectedFile);
       }
 
       const noticeMessage = `🏛️ *తహసీల్దార్ కార్యాలయం, పెద్దవడుగూరు*\n` +
@@ -380,14 +386,14 @@
             client_payload: {
               phone: phone,
               message: noticeMessage,
-              file_url: fileUrl
+              file_url: fileUrl || ""
             }
           })
         });
 
         if (response.status === 204 || response.ok) {
           alertBox.className = 'alert-success';
-          alertBox.innerHTML = '✅ వాట్సాప్‌కు నేరుగా డాక్యుమెంట్ పంపబడింది!';
+          alertBox.innerHTML = '✅ వాట్సాప్‌కు నేరుగా PDF మరియు నోటీస్ పంపబడింది!';
           alertBox.style.display = 'block';
         } else {
           throw new Error('API Error');

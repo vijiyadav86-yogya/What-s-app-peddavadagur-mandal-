@@ -15,14 +15,27 @@ jobs:
           RECIPIENT_PHONE: ${{ github.event.client_payload.phone }}
           MESSAGE_TEXT: ${{ github.event.client_payload.message }}
         run: |
-          curl -X POST "https://graph.facebook.com/v19.0/${PHONE_ID}/messages" \
+          PAYLOAD=$(jq -n \
+            --arg phone "$RECIPIENT_PHONE" \
+            --arg msg "$MESSAGE_TEXT" \
+            '{
+              messaging_product: "whatsapp",
+              recipient_type: "individual",
+              to: $phone,
+              type: "text",
+              text: { body: $msg }
+            }')
+
+          RESPONSE=$(curl -s -X POST "https://graph.facebook.com/v19.0/${PHONE_ID}/messages" \
             -H "Authorization: Bearer ${WHATSAPP_TOKEN}" \
             -H "Content-Type: application/json" \
-            -d '{
-              "messaging_product": "whatsapp",
-              "recipient_type": "individual",
-              "to": "'"${RECIPIENT_PHONE}"'",
-              "type": "text",
-              "text": { "body": "'"${MESSAGE_TEXT}"'" }
-            }'
-            
+            -d "$PAYLOAD")
+
+          echo "Response from Meta: $RESPONSE"
+
+          # Check if Meta returned an error
+          if echo "$RESPONSE" | grep -q '"error"'; then
+            echo "Meta API Error occurred!"
+            exit 1
+          fi
+          

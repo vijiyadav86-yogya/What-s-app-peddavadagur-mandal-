@@ -11,7 +11,6 @@ jobs:
       - name: Send Message via WhatsApp Cloud API
         env:
           WHATSAPP_TOKEN: ${{ secrets.WHATSAPP_TOKEN }}
-          PHONE_ID: ${{ secrets.WHATSAPP_PHONE_ID }}
           RECIPIENT_PHONE: ${{ github.event.client_payload.phone }}
           MESSAGE_TEXT: ${{ github.event.client_payload.message }}
         run: |
@@ -26,16 +25,14 @@ jobs:
               text: { body: $msg }
             }')
 
-          RESPONSE=$(curl -s -X POST "https://graph.facebook.com/v19.0/${PHONE_ID}/messages" \
+          RESPONSE=$(curl -s -X POST "https://graph.facebook.com/v19.0/1290612987479644/messages" \
             -H "Authorization: Bearer ${WHATSAPP_TOKEN}" \
             -H "Content-Type: application/json" \
             -d "$PAYLOAD")
 
-          echo "Response from Meta: $RESPONSE"
+          echo "Response: $RESPONSE"
 
-          # Check if Meta returned an error
           if echo "$RESPONSE" | grep -q '"error"'; then
-            echo "Meta API Error occurred!"
             exit 1
           fi
           

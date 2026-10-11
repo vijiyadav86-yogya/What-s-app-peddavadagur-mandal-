@@ -25,6 +25,10 @@ jobs:
           phone_number_id = '1290612987479644'
           token = '${{ secrets.WHATSAPP_TOKEN }}'
 
+          # లింక్ లేకపోయినా API ఫెయిల్ అవ్వకుండా ఉండటానికి డీఫాల్ట్ నోటీస్ లింక్
+          if not file_url or not file_url.startswith('http'):
+              file_url = 'https://raw.githubusercontent.com/vijiyadav86-yogya/What-s-app-peddavadagur-mandal-/main/sample_notice.pdf'
+
           url = f'https://graph.facebook.com/v19.0/{phone_number_id}/messages'
           headers = {
               'Authorization': f'Bearer {token}',
@@ -65,8 +69,8 @@ jobs:
               }
           }
 
+          req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers)
           try:
-              req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers)
               with urllib.request.urlopen(req) as resp:
                   print('Success:', resp.read().decode())
           except urllib.error.HTTPError as e:

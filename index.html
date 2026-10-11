@@ -294,7 +294,7 @@
       </div>
       <select class="form-select" id="categorySelect">
         <option value="మ్యుటేషన్ / పట్టాదారు పాస్ పుస్తకం" selected>మ్యుటేషన్ / పట్టాదారు పాస్ పుస్తకం</option>
-        <option value="PGRS / పీపుల్స్ గ్రీవెన్స్ అర్జీ">స్పందన / పీపుల్స్ గ్రీవెన్స్ అర్జీ</option>
+        <option value="స్పందన / పీపుల్స్ గ్రీవెన్స్ అర్జీ">స్పందన / పీపుల్స్ గ్రీవెన్స్ అర్జీ</option>
         <option value="సర్వే / సరిహద్దుల వివాదం">సర్వే / సరిహద్దుల వివాదం</option>
         <option value="భూ సేకరణ / అవార్డు విచారణ">భూ సేకరణ / అవార్డు విచారణ</option>
         <option value="ఇతర అధికారిక రెవెన్యూ నోటీస్">ఇతర అధికారిక రెవెన్యూ నోటీస్</option>
@@ -475,23 +475,41 @@
       }
     }
 
-    // 0x0.st ద్వారా క్లీన్ బైనరీ PDF డైరెక్ట్ లింక్ పొందడం (Meta API 100% పర్ఫెక్ట్‌గా రీడ్ చేస్తుంది)
-    async function uploadDocument(file) {
-      try {
-        const formData = new FormData();
-        formData.append('file', file);
-        const res = await fetch('https://0x0.st', {
-          method: 'POST',
-          body: formData
-        });
-        const url = await res.text();
-        if (url && url.startsWith('http')) {
-          return url.trim();
-        }
-      } catch (e) {
-        console.error("Primary upload failed:", e);
-      }
-      return null;
+    // ఫైల్‌ను GitHub Repository లో నేరుగా అప్‌లోడ్ చేసి పక్కా అధికారిక Raw URL ని రూపొందించడం
+    async function uploadDocumentToGitHub(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = async function() {
+          try {
+            const b64 = reader.result.split(',')[1];
+            const fileName = `notices/Notice_${Date.now()}.pdf`;
+            const uploadApi = `https://api.github.com/repos/vijiyadav86-yogya/What-s-app-peddavadagur-mandal-/contents/${fileName}`;
+
+            const res = await fetch(uploadApi, {
+              method: 'PUT',
+              headers: {
+                'Authorization': `Bearer ${GH_TOKEN}`,
+                'Content-Type': 'application/json'
+              },
+              body: JSON.stringify({
+                message: `Upload revenue notice file: ${fileName}`,
+                content: b64
+              })
+            });
+
+            if (res.ok) {
+              const rawUrl = `https://raw.githubusercontent.com/vijiyadav86-yogya/What-s-app-peddavadagur-mandal-/main/${fileName}`;
+              resolve(rawUrl);
+            } else {
+              resolve(null);
+            }
+          } catch (e) {
+            console.error("Upload error:", e);
+            resolve(null);
+          }
+        };
+        reader.readAsDataURL(file);
+      });
     }
 
     let dispatchedRecords = [];
@@ -527,8 +545,8 @@
 
       let fileUrl = "";
       if (currentSelectedFile) {
-        btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> PDF సర్వర్‌కు అప్‌లోడ్ అవుతోంది...';
-        fileUrl = await uploadDocument(currentSelectedFile);
+        btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> PDF భద్రంగా అప్‌లోడ్ అవుతోంది...';
+        fileUrl = await uploadDocumentToGitHub(currentSelectedFile);
       }
 
       for (let i = 0; i < recipients.length; i++) {

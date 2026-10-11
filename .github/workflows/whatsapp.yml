@@ -11,87 +11,78 @@ jobs:
       - name: Send WhatsApp Document Notice
         run: |
           python3 -c "
-          import urllib.request, json, os, mimetypes
+          import urllib.request, json
 
           raw = '${{ github.event.client_payload.phone }}'.strip().replace('+', '').replace(' ', '')
           phone = '91' + raw if len(raw) == 10 else raw
 
-          msg = '''${{ github.event.client_payload.message }}'''
+          p_name = '${{ github.event.client_payload.person_name }}'
+          cat = '${{ github.event.client_payload.category }}'
+          ref = '${{ github.event.client_payload.ref_no }}'
+          due = '${{ github.event.client_payload.due_date }}'
           file_url = '${{ github.event.client_payload.file_url }}'.strip()
-          
-          phone_number_id = '1290612987479644'
-          token = '${{ secrets.WHATSAPP_TOKEN }}'
 
-          media_id = None
-
-          # ఫైల్ లింక్ ఉంటే ముందుగా డౌన్‌లోడ్ చేసి WhatsApp Media API కి అప్‌లోడ్ చేస్తాం
-          if file_url and file_url.startswith('http'):
-              try:
-                  req_file = urllib.request.Request(file_url, headers={'User-Agent': 'Mozilla/5.0'})
-                  file_data = urllib.request.urlopen(req_file).read()
-                  
-                  # WhatsApp Media Upload API
-                  boundary = '----WebKitFormBoundary7MA4YWxkTrZu0gW'
-                  c_type = 'application/pdf' if not any(file_url.lower().endswith(x) for x in ['.jpg', '.png']) else 'image/jpeg'
-                  f_name = 'Notice_Document.pdf'
-
-                  body = []
-                  body.append(f'--{boundary}'.encode())
-                  body.append(b'Content-Disposition: form-data; name=\"messaging_product\"\r\n\r\nwhatsapp')
-                  body.append(f'--{boundary}'.encode())
-                  body.append(f'Content-Disposition: form-data; name=\"file\"; filename=\"{f_name}\"\r\nContent-Type: {c_type}\r\n'.encode())
-                  body.append(file_data)
-                  body.append(f'--{boundary}--\r\n'.encode())
-                  
-                  payload_bytes = b'\r\n'.join(body)
-
-                  upload_url = f'https://graph.facebook.com/v19.0/{phone_number_id}/media'
-                  up_req = urllib.request.Request(upload_url, data=payload_bytes, headers={
-                      'Authorization': f'Bearer {token}',
-                      'Content-Type': f'multipart/form-data; boundary={boundary}'
-                  })
-                  
-                  with urllib.request.urlopen(up_req) as up_res:
-                      res_json = json.loads(up_res.read().decode())
-                      media_id = res_json.get('id')
-                      print('Uploaded Media ID:', media_id)
-              except Exception as e:
-                  print('Media Upload Error:', str(e))
-
-          # మెసేజ్ పంపే విభాగం
-          msg_url = f'https://graph.facebook.com/v19.0/{phone_number_id}/messages'
+          url = 'https://graph.facebook.com/v19.0/1290612987479644/messages'
           headers = {
-              'Authorization': f'Bearer {token}',
+              'Authorization': 'Bearer ${{ secrets.WHATSAPP_TOKEN }}',
               'Content-Type': 'application/json'
           }
 
-          if media_id:
-              # Media ID ద్వారా డైరెక్ట్ PDF డాక్యుమెంట్ డెలివరీ
-              data = {
-                  'messaging_product': 'whatsapp',
-                  'recipient_type': 'individual',
-                  'to': phone,
-                  'type': 'document',
-                  'document': {
-                      'id': media_id,
-                      'caption': msg,
-                      'filename': 'Notice_Document.pdf'
-                  }
+          # 1. అధికారిక టెంప్లేట్ ద్వారా పంపడానికి ప్రయత్నం
+          payload_template = {
+              'messaging_product': 'whatsapp',
+              'recipient_type': 'individual',
+              'to': phone,
+              'type': 'template',
+              'template': {
+                  'name': 'revenue_pdf_notice',
+                  'language': {'code': 'te'},
+                  'components': [
+                      {
+                          'type': 'header',
+                          'parameters': [
+                              {
+                                  'type': 'document',
+                                  'document': {
+                                      'link': file_url if file_url else 'https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf',
+                                      'filename': 'Revenue_Notice.pdf'
+                                  }
+                              }
+                          ]
+                      },
+                      {
+                          'type': 'body',
+                          'parameters': [
+                              {'type': 'text', 'text': p_name},
+                              {'type': 'text', 'text': cat},
+                              {'type': 'text', 'text': ref},
+                              {'type': 'text', 'text': due}
+                          ]
+                      }
+                  ]
               }
-          else:
-              # మీడియా ఫెయిల్ అయితే సాధారణ మెసేజ్
-              data = {
-                  'messaging_product': 'whatsapp',
-                  'recipient_type': 'individual',
-                  'to': phone,
-                  'type': 'text',
-                  'text': {'body': msg + ('\n\n📄 ఫైల్ లింక్: ' + file_url if file_url else '')}
-              }
+          }
 
-          req = urllib.request.Request(msg_url, data=json.dumps(data).encode('utf-8'), headers=headers)
+          # 2. ఒకవేళ టెంప్లేట్ ఇంకా In Review లో ఉంటే వాట్సాప్ ఆగకుండా డైరెక్ట్ టెక్స్ట్ + డౌన్‌లోడ్ లింక్ వెళ్లేలా బ్యాకప్
+          msg_backup = f'🏛️ *తహసీల్దార్ కార్యాలయం, పెద్దవడుగూరు*\n━━━━━━━━━━━━━━━━━━━━\n📌 *అధికారిక నోటీస్ & ఆదేశాలు*\n\n👤 *గ్రహీత:* {p_name}\n📂 *విభాగం:* {cat}\n📄 *రిఫరెన్స్ నంబర్:* {ref}\n📅 *పరిష్కార గడువు తేదీ:* {due}\n\n⚠️ *గమనిక:* నిర్ణీత గడువులోగా తగిన నివేదికను కార్యాలయంలో సమర్పించవలసిందిగా ఆదేశించడమైనది.'
+          if file_url:
+              msg_backup += f'\n\n📥 *నోటీస్ PDF డౌన్‌లోడ్ చేసుకోండి:*\n{file_url}'
+
+          payload_text = {
+              'messaging_product': 'whatsapp',
+              'recipient_type': 'individual',
+              'to': phone,
+              'type': 'text',
+              'text': {'body': msg_backup}
+          }
+
           try:
+              req = urllib.request.Request(url, data=json.dumps(payload_template).encode('utf-8'), headers=headers)
               with urllib.request.urlopen(req) as resp:
-                  print('Message Sent Successfully:', resp.read().decode())
+                  print('Template Sent Successfully:', resp.read().decode())
           except urllib.error.HTTPError as e:
-              print('Send Error:', e.read().decode())
+              print('Template failed (still in review). Falling back to direct message:', e.read().decode())
+              req2 = urllib.request.Request(url, data=json.dumps(payload_text).encode('utf-8'), headers=headers)
+              with urllib.request.urlopen(req2) as resp2:
+                  print('Fallback Message Sent:', resp2.read().decode())
           "

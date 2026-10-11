@@ -1,5 +1,86 @@
-// ఫైల్‌ను నేరుగా తాత్కాలిక పబ్లిక్ లింక్ గా మార్చడం (GitHub commits అవసరం లేదు)
-    async function uploadDocumentToGitHub(file) {
+<!DOCTYPE html>
+<html lang="te">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>రెవెన్యూ నోటీసుల నిర్వహణ పోర్టల్ - పెద్దవడుగూరు</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body { background-color: #f0f2f5; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    .header-card { background: linear-gradient(135deg, #1b5e20, #2e7d32); color: white; border-radius: 12px; }
+    .main-card { border-radius: 12px; border: none; box-shadow: 0 4px 12px rgba(0,0,0,0.08); }
+    .btn-whatsapp { background-color: #25D366; color: white; font-weight: bold; }
+    .btn-whatsapp:hover { background-color: #1ebc59; color: white; }
+  </style>
+</head>
+<body class="p-3 p-md-4">
+  <div class="container" style="max-width: 950px;">
+    
+    <!-- Header -->
+    <div class="header-card p-4 mb-4 text-center shadow">
+      <h3 class="mb-1 fw-bold"><i class="fa-solid fa-landmark me-2"></i>తహసీల్దార్ కార్యాలయం, పెద్దవడుగూరు</h3>
+      <p class="mb-0 opacity-75">డిజిటల్ రెవెన్యూ నోటీసులు & వాట్సాప్ పంపిణీ పోర్టల్</p>
+    </div>
+
+    <!-- Notice Form -->
+    <div class="card main-card p-4 mb-4">
+      <h5 class="fw-bold text-success mb-3"><i class="fa-solid fa-pen-to-square me-2"></i>నోటీస్ వివరాలు నమోదు చేయండి</h5>
+      <form id="noticeForm">
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">గ్రహీత పేరు (Person / Rythu Name)</label>
+            <input type="text" id="personName" class="form-control" placeholder="ఉదా: రాముడు" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label fw-semibold">వాట్సాప్ మొబైల్ నంబర్ (10 Digits)</label>
+            <input type="tel" id="phoneNumber" class="form-control" placeholder="9876543210" pattern="[0-9]{10}" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">విభాగం (Category)</label>
+            <select id="category" class="form-select" required>
+              <option value="మ్యుటేషన్ విచారణ">మ్యుటేషన్ విచారణ</option>
+              <option value="భూ వివాదం నోటీస్">భూ వివాదం నోటీస్</option>
+              <option value="సర్వే హాజరు నోటీస్">సర్వే హాజరు నోటీస్</option>
+              <option value="రెవెన్యూ సమన్లు">రెవెన్యూ సమన్లు</option>
+              <option value="సాధారణ ఆదేశాలు">సాధారణ ఆదేశాలు</option>
+            </select>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">రిఫరెన్స్ / కేస్ నంబర్</label>
+            <input type="text" id="refNo" class="form-control" placeholder="Rc/123/2026" required>
+          </div>
+          <div class="col-md-4">
+            <label class="form-label fw-semibold">హాజరు / గడువు తేదీ</label>
+            <input type="date" id="dueDate" class="form-control" required>
+          </div>
+          <div class="col-12">
+            <label class="form-label fw-semibold">నోటీస్ PDF ఫైల్ (ఐచ్ఛికం - Select Notice PDF)</label>
+            <input type="file" id="pdfFile" class="form-control" accept="application/pdf">
+          </div>
+        </div>
+
+        <div class="mt-4 d-flex justify-content-between align-items-center">
+          <button type="submit" class="btn btn-whatsapp px-4 py-2" id="submitBtn">
+            <i class="fa-brands fa-whatsapp me-2"></i>వాట్సాప్‌లో నోటీస్ పంపు (Send Notice)
+          </button>
+          <span id="statusText" class="fw-semibold"></span>
+        </div>
+      </form>
+    </div>
+
+    <!-- Info Banner -->
+    <div class="alert alert-secondary text-center small text-muted">
+      Peddavadagur Mandal Revenue Digital Communication System • Automated via GitHub Actions & Meta Cloud API
+    </div>
+
+  </div>
+
+  <script>
+    const GITHUB_REPO = "vijiyadav86-yogya/What-s-app-peddavadagur-mandal-";
+
+    async function uploadDocument(file) {
+      if (!file) return "";
       try {
         const formData = new FormData();
         formData.append('reqtype', 'fileupload');
@@ -9,13 +90,66 @@
           method: 'POST',
           body: formData
         });
-
         if (res.ok) {
           const directUrl = await res.text();
           return directUrl.trim();
         }
       } catch (e) {
-        console.error("Direct upload error:", e);
+        console.error("Upload error:", e);
       }
       return "";
     }
+
+    document.getElementById('noticeForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const btn = document.getElementById('submitBtn');
+      const status = document.getElementById('statusText');
+      const file = document.getElementById('pdfFile').files[0];
+
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>పంపుతోంది...';
+      status.innerText = file ? "PDF ఫైల్ సిద్ధం చేయబడుతోంది..." : "నోటీస్ పంపబడుతోంది...";
+      status.className = "text-primary fw-semibold";
+
+      try {
+        let fileUrl = "";
+        if (file) {
+          fileUrl = await uploadDocument(file);
+        }
+
+        const payload = {
+          event_type: "send_notice",
+          client_payload: {
+            person_name: document.getElementById('personName').value,
+            phone: document.getElementById('phoneNumber').value,
+            category: document.getElementById('category').value,
+            ref_no: document.getElementById('refNo').value,
+            due_date: document.getElementById('dueDate').value,
+            file_url: fileUrl
+          }
+        };
+
+        const res = await fetch(`https://api.github.com/repos/${GITHUB_REPO}/dispatches`, {
+          method: "POST",
+          headers: {
+            "Accept": "application/vnd.github.v3+json",
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(payload)
+        });
+
+        status.innerText = "✅ నోటీస్ విజయవంతంగా పంపబడింది!";
+        status.className = "text-success fw-bold";
+        document.getElementById('noticeForm').reset();
+      } catch (err) {
+        status.innerText = "❌ పంపడంలో లోపం జరిగింది. మళ్ళీ ప్రయత్నించండి.";
+        status.className = "text-danger fw-bold";
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="fa-brands fa-whatsapp me-2"></i>వాట్సాప్‌లో నోటీస్ పంపు (Send Notice)';
+      }
+    });
+  </script>
+</body>
+</html>

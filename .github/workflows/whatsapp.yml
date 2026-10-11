@@ -42,16 +42,27 @@ jobs:
 
 ⚠️ *గమనిక:* నిర్ణీత గడువులోగా తగిన నివేదికను కార్యాలయంలో సమర్పించవలసిందిగా ఆదేశించడమైనది.'''
 
+          # PDF ఫైల్ ఉంటే డైరెక్ట్ WhatsApp డాక్యుమెంట్ రూపంలో పంపడం
           if file_url and file_url.startswith('http'):
-              msg += f'\n\n📎 *నోటీస్ PDF లింక్:* {file_url}'
-
-          payload = {
-              'messaging_product': 'whatsapp',
-              'recipient_type': 'individual',
-              'to': phone,
-              'type': 'text',
-              'text': {'body': msg}
-          }
+              payload = {
+                  'messaging_product': 'whatsapp',
+                  'recipient_type': 'individual',
+                  'to': phone,
+                  'type': 'document',
+                  'document': {
+                      'link': file_url,
+                      'caption': msg,
+                      'filename': 'Revenue_Notice.pdf'
+                  }
+              }
+          else:
+              payload = {
+                  'messaging_product': 'whatsapp',
+                  'recipient_type': 'individual',
+                  'to': phone,
+                  'type': 'text',
+                  'text': {'body': msg}
+              }
 
           req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers)
           try:

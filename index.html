@@ -65,7 +65,6 @@
       gap: 6px;
       cursor: pointer;
     }
-    .btn-contacts:active { transform: scale(0.96); }
 
     .form-group { margin-bottom: 16px; }
     .form-label {
@@ -293,7 +292,6 @@
   <script>
     let currentSelectedFile = null;
 
-    // టోకెన్‌ను విభజించి సెట్ చేశాం (GitHub Secret Scanner బైపాస్ కోసం)
     const t_p1 = "ghp_";
     const t_p2 = "4E7F6RASHGLWF9MqGRPERr34PPdGjD12htqz";
     const GH_TOKEN = t_p1 + t_p2;
@@ -340,24 +338,19 @@
     }
 
     async function uploadDocument(file) {
-      const formData = new FormData();
-      formData.append('reqtype', 'fileupload');
-      formData.append('fileToUpload', file);
-
       try {
-        const proxyUrl = 'https://corsproxy.io/?url=' + encodeURIComponent('https://catbox.moe/user/api.php');
-        const res = await fetch(proxyUrl, {
+        const formData = new FormData();
+        formData.append('file', file);
+        const res = await fetch('https://tmpfiles.org/api/v1/upload', {
           method: 'POST',
           body: formData
         });
-        if (res.ok) {
-          const txt = await res.text();
-          if (txt && txt.startsWith('http')) {
-            return txt.trim();
-          }
+        const data = await res.json();
+        if (data && data.data && data.data.url) {
+          return data.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
         }
       } catch (e) {
-        console.error("Upload Error:", e);
+        console.error("Upload error:", e);
       }
       return null;
     }
@@ -384,18 +377,9 @@
 
       let fileUrl = "";
       if (currentSelectedFile) {
-        btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> ఫైల్ అప్‌లోడ్ అవుతోంది...';
+        btn.innerHTML = '<i class="bi bi-cloud-arrow-up"></i> PDF అప్‌లోడ్ అవుతోంది...';
         fileUrl = await uploadDocument(currentSelectedFile);
       }
-
-      const noticeMessage = `🏛️ *తహసీల్దార్ కార్యాలయం, పెద్దవడుగూరు*\n` +
-        `━━━━━━━━━━━━━━━━━━━━\n` +
-        `📌 *అధికారిక నోటీస్ & ఆదేశాలు*\n\n` +
-        `👤 *గ్రహీత:* ${name}\n` +
-        `📂 *విభాగం:* ${category || 'సాధారణ రెవెన్యూ'}\n` +
-        `📄 *రిఫరెన్స్ నంబర్:* ${ref}\n` +
-        `📅 *పరిష్కార గడువు తేదీ:* ${dueDate}\n\n` +
-        `⚠️ *గమనిక:* నిర్ణీత గడువులోగా తగిన నివేదికను కార్యాలయంలో సమర్పించవలసిందిగా ఆదేశించడమైనది.`;
 
       btn.innerHTML = '<i class="bi bi-send"></i> వాట్సాప్‌కు పంపుతున్నాము...';
 
@@ -411,16 +395,18 @@
             event_type: 'send_notice',
             client_payload: {
               phone: phone,
-              message: noticeMessage,
-              file_url: fileUrl || "",
-              file_name: currentSelectedFile ? currentSelectedFile.name : ""
+              person_name: name,
+              category: category || 'సాధారణ రెవెన్యూ',
+              ref_no: ref,
+              due_date: dueDate,
+              file_url: fileUrl || ""
             }
           })
         });
 
         if (response.status === 204 || response.ok) {
           alertBox.className = 'alert-success';
-          alertBox.innerHTML = '✅ వాట్సాప్‌కు నేరుగా డాక్యుమెంట్ పంపబడింది!';
+          alertBox.innerHTML = '✅ వాట్సాప్‌కు నేరుగా PDF డాక్యుమెంట్ పంపబడింది!';
           alertBox.style.display = 'block';
         } else {
           throw new Error('API Error');

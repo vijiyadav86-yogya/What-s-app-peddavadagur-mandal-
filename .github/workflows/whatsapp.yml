@@ -45,7 +45,6 @@ jobs:
 
 ⚠️ నిర్ణీత గడువులోగా తగిన నివేదికను కార్యాలయంలో సమర్పించవలెను.'''
 
-          # డైరెక్ట్ డాక్యుమెంట్ మోడ్ (టెంప్లేట్ రివ్యూ అవసరం లేదు)
           payload = {
               'messaging_product': 'whatsapp',
               'recipient_type': 'individual',
@@ -61,8 +60,8 @@ jobs:
           req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers)
           try:
               with urllib.request.urlopen(req) as resp:
-                  print('✅ DOCUMENT NOTICE SENT SUCCESSFULLY:', resp.read().decode())
+                  print('SUCCESS:', resp.read().decode())
           except urllib.error.HTTPError as e:
-              print('Send Error:', e.read().decode())
+              print('Error:', e.read().decode())
               exit(1)
           "

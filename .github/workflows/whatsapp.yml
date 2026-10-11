@@ -11,7 +11,7 @@ jobs:
       - name: Send WhatsApp Document Notice
         run: |
           python3 -c "
-          import urllib.request, json, os
+          import urllib.request, json
 
           raw = '${{ github.event.client_payload.phone }}'.strip().replace('+', '').replace(' ', '')
           phone = '91' + raw if len(raw) == 10 else raw
@@ -24,46 +24,12 @@ jobs:
 
           phone_number_id = '1290612987479644'
           token = '${{ secrets.WHATSAPP_TOKEN }}'
-          media_id = None
 
-          # File download chesi WhatsApp Media API ki direct ga upload chesthunnam
-          if file_url and file_url.startswith('http'):
-              try:
-                  req_file = urllib.request.Request(file_url, headers={'User-Agent': 'Mozilla/5.0'})
-                  file_bytes = urllib.request.urlopen(req_file).read()
-
-                  boundary = '----WebKitFormBoundary7MA4YWxkTrZu0gW'
-                  body = []
-                  body.append(f'--{boundary}'.encode())
-                  body.append(b'Content-Disposition: form-data; name=\"messaging_product\"\r\n\r\nwhatsapp')
-                  body.append(f'--{boundary}'.encode())
-                  body.append(b'Content-Disposition: form-data; name=\"file\"; filename=\"Revenue_Notice.pdf\"\r\nContent-Type: application/pdf\r\n')
-                  body.append(file_bytes)
-                  body.append(f'--{boundary}--\r\n'.encode())
-                  
-                  payload_bytes = b'\r\n'.join(body)
-
-                  up_url = f'https://graph.facebook.com/v19.0/{phone_number_id}/media'
-                  up_req = urllib.request.Request(up_url, data=payload_bytes, headers={
-                      'Authorization': f'Bearer {token}',
-                      'Content-Type': f'multipart/form-data; boundary={boundary}'
-                  })
-
-                  with urllib.request.urlopen(up_req) as up_res:
-                      media_res = json.loads(up_res.read().decode())
-                      media_id = media_res.get('id')
-                      print('Uploaded Media ID:', media_id)
-              except Exception as err:
-                  print('Media Upload Warning:', err)
-
-          # WhatsApp Template Payload
           url = f'https://graph.facebook.com/v19.0/{phone_number_id}/messages'
           headers = {
               'Authorization': f'Bearer {token}',
               'Content-Type': 'application/json'
           }
-
-          doc_param = {'id': media_id, 'filename': 'Revenue_Notice.pdf'} if media_id else {'link': file_url, 'filename': 'Revenue_Notice.pdf'}
 
           payload = {
               'messaging_product': 'whatsapp',
@@ -79,7 +45,10 @@ jobs:
                           'parameters': [
                               {
                                   'type': 'document',
-                                  'document': doc_param
+                                  'document': {
+                                      'link': file_url,
+                                      'filename': 'Revenue_Notice.pdf'
+                                  }
                               }
                           ]
                       },
@@ -102,4 +71,5 @@ jobs:
                   print('Success:', resp.read().decode())
           except urllib.error.HTTPError as e:
               print('Send Error:', e.read().decode())
+              exit(1)
           "

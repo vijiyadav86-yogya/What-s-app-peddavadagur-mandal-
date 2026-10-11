@@ -81,7 +81,6 @@
       outline: none;
     }
 
-    /* Recipients Container */
     .recipients-box {
       background: #f1f5f9;
       border: 1.5px solid #cbd5e1;
@@ -145,7 +144,6 @@
       padding: 0 4px;
     }
 
-    /* Attachment Box */
     .attachment-box {
       background: #f8fafc;
       border: 1.5px solid #e2e8f0;
@@ -204,7 +202,6 @@
     }
     .btn-send:disabled { opacity: 0.6; cursor: not-allowed; }
 
-    /* Status Section */
     #statusReport {
       margin-top: 18px;
       background: #ffffff;
@@ -250,7 +247,6 @@
       cursor: pointer;
     }
 
-    /* Print Slip Styles */
     @media print {
       body * { visibility: hidden; }
       #printableReceipt, #printableReceipt * { visibility: visible; }
@@ -292,7 +288,6 @@
 
   <div class="form-card">
     
-    <!-- Category -->
     <div class="category-box">
       <div class="category-title">
         <i class="bi bi-list-task"></i> విభాగం ఎంచుకోండి (Category) <span class="required">*</span>
@@ -306,7 +301,6 @@
       </select>
     </div>
 
-    <!-- Multiple Recipients Box -->
     <div class="recipients-box">
       <div class="recipients-head">
         <label class="form-label" style="margin: 0;">👥 గ్రహీతల జాబితా (Recipients) <span class="required">*</span></label>
@@ -316,9 +310,8 @@
       </div>
 
       <div id="recipientsList">
-        <!-- Default Single Item -->
         <div class="recipient-item">
-          <input type="text" class="recipient-name" placeholder="పేరు (ఉదా: వి.ఆర్.ఓ)" value="రాజేష్">
+          <input type="text" class="recipient-name" placeholder="పేరు" value="రాజేష్">
           <input type="tel" class="recipient-phone" placeholder="9876543210" value="8688421131">
           <button type="button" class="btn-remove" onclick="removeRecipient(this)"><i class="bi bi-x-circle"></i></button>
         </div>
@@ -371,14 +364,12 @@
       <i class="bi bi-send-fill"></i> అందరికీ వాట్సాప్‌లో పంపు (Send All)
     </button>
 
-    <!-- Delivery Status Box (Feature 3) -->
     <div id="statusReport">
       <div class="status-title">
         <span><i class="bi bi-card-checklist"></i> పంపిణీ స్థితి (Live Delivery Status)</span>
       </div>
       <div id="statusList"></div>
       
-      <!-- Print Slip Button (Feature 4) -->
       <button class="btn-receipt" id="printReceiptBtn" onclick="printOfficeReceipt()">
         <i class="bi bi-printer-fill"></i> ఆఫీస్ రికార్డు రశీదు ప్రింట్ చేయి (Ack Slip)
       </button>
@@ -386,7 +377,6 @@
 
   </div>
 
-  <!-- Printable Acknowledgement Receipt (Feature 4) -->
   <div id="printableReceipt">
     <div class="receipt-header">
       <h2>తహసీల్దార్ కార్యాలయం, పెద్దవడుగూరు</h2>
@@ -455,7 +445,6 @@
       }
     }
 
-    // Multiple Contacts Selection
     async function selectMultipleContacts() {
       if ('contacts' in navigator && 'ContactsManager' in window) {
         try {
@@ -490,13 +479,13 @@
       try {
         const formData = new FormData();
         formData.append('file', file);
-        const res = await fetch('https://tmpfiles.org/api/v1/upload', {
+        const res = await fetch('https://file.io', {
           method: 'POST',
           body: formData
         });
         const data = await res.json();
-        if (data && data.data && data.data.url) {
-          return data.data.url.replace('tmpfiles.org/', 'tmpfiles.org/dl/');
+        if (data && data.success && data.link) {
+          return data.link;
         }
       } catch (e) {
         console.error("Upload error:", e);
@@ -515,7 +504,6 @@
       const statusList = document.getElementById('statusList');
       const receiptBtn = document.getElementById('printReceiptBtn');
 
-      // Get Recipients
       const items = document.querySelectorAll('.recipient-item');
       const recipients = [];
       items.forEach(el => {

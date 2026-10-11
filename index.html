@@ -294,7 +294,7 @@
       </div>
       <select class="form-select" id="categorySelect">
         <option value="మ్యుటేషన్ / పట్టాదారు పాస్ పుస్తకం" selected>మ్యుటేషన్ / పట్టాదారు పాస్ పుస్తకం</option>
-        <option value="స్పందన / పీపుల్స్ గ్రీవెన్స్ అర్జీ">స్పందన / పీపుల్స్ గ్రీవెన్స్ అర్జీ</option>
+        <option value="PGRS / పీపుల్స్ గ్రీవెన్స్ అర్జీ">స్పందన / పీపుల్స్ గ్రీవెన్స్ అర్జీ</option>
         <option value="సర్వే / సరిహద్దుల వివాదం">సర్వే / సరిహద్దుల వివాదం</option>
         <option value="భూ సేకరణ / అవార్డు విచారణ">భూ సేకరణ / అవార్డు విచారణ</option>
         <option value="ఇతర అధికారిక రెవెన్యూ నోటీస్">ఇతర అధికారిక రెవెన్యూ నోటీస్</option>
@@ -475,20 +475,21 @@
       }
     }
 
+    // 0x0.st ద్వారా క్లీన్ బైనరీ PDF డైరెక్ట్ లింక్ పొందడం (Meta API 100% పర్ఫెక్ట్‌గా రీడ్ చేస్తుంది)
     async function uploadDocument(file) {
       try {
         const formData = new FormData();
         formData.append('file', file);
-        const res = await fetch('https://file.io', {
+        const res = await fetch('https://0x0.st', {
           method: 'POST',
           body: formData
         });
-        const data = await res.json();
-        if (data && data.success && data.link) {
-          return data.link;
+        const url = await res.text();
+        if (url && url.startsWith('http')) {
+          return url.trim();
         }
       } catch (e) {
-        console.error("Upload error:", e);
+        console.error("Primary upload failed:", e);
       }
       return null;
     }

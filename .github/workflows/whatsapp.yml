@@ -25,64 +25,39 @@ jobs:
           phone_number_id = '1290612987479644'
           token = '${{ secrets.WHATSAPP_TOKEN }}'
 
-          if not file_url or not file_url.startswith('http'):
-              file_url = 'https://raw.githubusercontent.com/vijiyadav86-yogya/What-s-app-peddavadagur-mandal-/main/sample_notice.pdf'
-
           url = f'https://graph.facebook.com/v19.0/{phone_number_id}/messages'
           headers = {
               'Authorization': f'Bearer {token}',
               'Content-Type': 'application/json'
           }
 
-          # Meta Telugu కోడ్స్ (te_IN మరియు te) రెండింటినీ వరుసగా ప్రయత్నిస్తుంది
-          lang_codes = ['te_IN', 'te']
-          sent_success = False
+          msg = f'''🏛️ *తహసీల్దార్ కార్యాలయం, పెద్దవడుగూరు*
+━━━━━━━━━━━━━━━━━━━━
+📌 *అధికారిక నోటీస్ & ఆదేశాలు*
 
-          for l_code in lang_codes:
-              payload = {
-                  'messaging_product': 'whatsapp',
-                  'recipient_type': 'individual',
-                  'to': phone,
-                  'type': 'template',
-                  'template': {
-                      'name': 'revenue_pdf_notice',
-                      'language': {'code': l_code},
-                      'components': [
-                          {
-                              'type': 'header',
-                              'parameters': [
-                                  {
-                                      'type': 'document',
-                                      'document': {
-                                          'link': file_url,
-                                          'filename': 'Revenue_Notice.pdf'
-                                      }
-                                  }
-                              ]
-                          },
-                          {
-                              'type': 'body',
-                              'parameters': [
-                                  {'type': 'text', 'text': p_name},
-                                  {'type': 'text', 'text': cat},
-                                  {'type': 'text', 'text': ref},
-                                  {'type': 'text', 'text': due}
-                              ]
-                          }
-                      ]
-                  }
-              }
+👤 *గ్రహీత:* {p_name}
+📂 *విభాగం:* {cat}
+📄 *రిఫరెన్స్ నంబర్:* {ref}
+📅 *పరిష్కార గడువు తేదీ:* {due}
 
-              req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers)
-              try:
-                  with urllib.request.urlopen(req) as resp:
-                      print(f'Success with language {l_code}:', resp.read().decode())
-                      sent_success = True
-                      break
-              except urllib.error.HTTPError as e:
-                  print(f'Attempt failed for {l_code}:', e.read().decode())
+⚠️ *గమనిక:* నిర్ణీత గడువులోగా తగిన నివేదికను కార్యాలయంలో సమర్పించవలసిందిగా ఆదేశించడమైనది.'''
 
-          if not sent_success:
-              print('Both language codes failed.')
+          if file_url and file_url.startswith('http'):
+              msg += f'\n\n📎 *నోటీస్ PDF లింక్:* {file_url}'
+
+          payload = {
+              'messaging_product': 'whatsapp',
+              'recipient_type': 'individual',
+              'to': phone,
+              'type': 'text',
+              'text': {'body': msg}
+          }
+
+          req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers)
+          try:
+              with urllib.request.urlopen(req) as resp:
+                  print('Success:', resp.read().decode())
+          except urllib.error.HTTPError as e:
+              print('Send Error:', e.read().decode())
               exit(1)
           "

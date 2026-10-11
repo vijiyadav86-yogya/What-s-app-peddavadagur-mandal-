@@ -34,71 +34,35 @@ jobs:
               'Content-Type': 'application/json'
           }
 
-          # 1. revenue_pdf_notice (Telugu) ద్వారా పంపడానికి ప్రయత్నం
-          payload_custom = {
+          caption_text = f'''🏛️ *తహసీల్దార్ కార్యాలయం, పెద్దవడుగూరు*
+━━━━━━━━━━━━━━━━━━━━
+📌 *అధికారిక రెవెన్యూ నోటీస్*
+
+👤 *గ్రహీత:* {p_name}
+📂 *విభాగం:* {cat}
+📄 *రిఫరెన్స్:* {ref}
+📅 *గడువు తేదీ:* {due}
+
+⚠️ నిర్ణీత గడువులోగా తగిన నివేదికను కార్యాలయంలో సమర్పించవలెను.'''
+
+          # డైరెక్ట్ డాక్యుమెంట్ మోడ్ (టెంప్లేట్ రివ్యూ అవసరం లేదు)
+          payload = {
               'messaging_product': 'whatsapp',
               'recipient_type': 'individual',
               'to': phone,
-              'type': 'template',
-              'template': {
-                  'name': 'revenue_pdf_notice',
-                  'language': {'code': 'te'},
-                  'components': [
-                      {
-                          'type': 'header',
-                          'parameters': [
-                              {
-                                  'type': 'document',
-                                  'document': {
-                                      'link': file_url,
-                                      'filename': 'Revenue_Notice.pdf'
-                                  }
-                              }
-                          ]
-                      },
-                      {
-                          'type': 'body',
-                          'parameters': [
-                              {'type': 'text', 'text': p_name},
-                              {'type': 'text', 'text': cat},
-                              {'type': 'text', 'text': ref},
-                              {'type': 'text', 'text': due}
-                          ]
-                      }
-                  ]
+              'type': 'document',
+              'document': {
+                  'link': file_url,
+                  'caption': caption_text,
+                  'filename': f'{ref}.pdf'
               }
           }
 
-          success = False
+          req = urllib.request.Request(url, data=json.dumps(payload).encode('utf-8'), headers=headers)
           try:
-              req = urllib.request.Request(url, data=json.dumps(payload_custom).encode('utf-8'), headers=headers)
               with urllib.request.urlopen(req) as resp:
-                  print('✅ Revenue Template Delivered Successfully:', resp.read().decode())
-                  success = True
+                  print('✅ DOCUMENT NOTICE SENT SUCCESSFULLY:', resp.read().decode())
           except urllib.error.HTTPError as e:
-              print('Revenue template is still under review/failed:', e.read().decode())
-
-          # 2. ఒకవేళ టెంప్లేట్ ఇంకా In Review లో ఉంటే, కనెక్షన్ పరీక్షించడానికి hello_world ద్వారా డెలివరీ
-          if not success:
-              print('Sending default approved template (hello_world) to verify delivery...')
-              payload_fallback = {
-                  'messaging_product': 'whatsapp',
-                  'recipient_type': 'individual',
-                  'to': phone,
-                  'type': 'template',
-                  'template': {
-                      'name': 'hello_world',
-                      'language': {'code': 'en_US'}
-                  }
-              }
-              try:
-                  req_fb = urllib.request.Request(url, data=json.dumps(payload_fallback).encode('utf-8'), headers=headers)
-                  with urllib.request.urlopen(req_fb) as resp_fb:
-                      print('✅ Fallback Delivered Successfully:', resp_fb.read().decode())
-                      success = True
-              except urllib.error.HTTPError as e_fb:
-                  print('Fallback error:', e_fb.read().decode())
-
-          if not success:
+              print('Send Error:', e.read().decode())
               exit(1)
           "

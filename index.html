@@ -30,7 +30,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-16">
 
-  <!-- తహసీల్దార్ లాగిన్ విండో -->
+  <!-- తహసీల్దార్ లాగిన్ విండో (PIN: 1234) -->
   <div id="tahsildarAuthOverlay" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-7 text-center border border-amber-300">
       <div class="w-16 h-16 bg-gradient-to-tr from-amber-500 to-amber-300 text-slate-950 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-amber-500/20">
@@ -88,7 +88,7 @@
 
   <main class="max-w-7xl mx-auto px-4 py-8 space-y-8">
 
-    <!-- ఆదేశాలు జారీ చేసే ఫారమ్ (అందరికీ అందుబాటులో ఉండే భాగం) -->
+    <!-- ఆదేశాలు జారీ చేసే ఫారమ్ -->
     <div class="glass-card rounded-3xl shadow-lg border border-slate-200/90 overflow-hidden">
       <div class="border-b border-slate-100 bg-slate-50/90 px-6 py-4 flex items-center justify-between">
         <div class="flex items-center space-x-2.5">
@@ -108,7 +108,6 @@
       <form id="dispatchForm" class="p-6 md:p-8 space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-          <!-- అర్జీ రకం -->
           <div>
             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">అర్జీ రకం (Revenue Category)</label>
             <div class="relative">
@@ -127,7 +126,6 @@
             </div>
           </div>
 
-          <!-- అర్జిదారుని పేరు -->
           <div>
             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">అర్జిదారుని పేరు (Applicant Name)</label>
             <div class="relative">
@@ -136,7 +134,6 @@
             </div>
           </div>
 
-          <!-- రిఫరెన్స్ నంబర్ -->
           <div>
             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">రిఫరెన్స్ / అర్జీ నంబర్</label>
             <div class="relative">
@@ -145,7 +142,6 @@
             </div>
           </div>
 
-          <!-- సిబ్బంది వివరాలు & ఫోన్ నంబర్ -->
           <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <div class="flex items-center justify-between mb-2">
@@ -168,7 +164,6 @@
             </div>
           </div>
 
-          <!-- ఫైల్ అప్‌లోడ్ -->
           <div>
             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">అర్జీ కాపీ (PDF / JPG)</label>
             <div class="relative">
@@ -176,7 +171,6 @@
             </div>
           </div>
 
-          <!-- గడువు లెక్కింపు -->
           <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-4 bg-gradient-to-r from-teal-50/80 via-emerald-50/80 to-teal-50/80 p-5 rounded-2xl border border-teal-200">
             <div>
               <label class="block text-xs font-bold text-teal-950 uppercase tracking-wider mb-2">గడువు రోజులు (ఎంపిక)</label>
@@ -211,7 +205,7 @@
       </form>
     </div>
 
-    <!-- తహసీల్దార్ ప్రత్యేక పర్యవేక్షణ విభాగం (పాస్‌వర్డ్ 1234 నమోదు చేస్తేనే కనిపిస్తుంది) -->
+    <!-- తహసీల్దార్ ప్రత్యేక పర్యవేక్షణ విభాగం (Password 1234 tho maatrame open avthundi) -->
     <section id="tahsildarDashboardSection" class="hidden space-y-8">
       
       <div class="bg-gradient-to-br from-amber-500/10 via-amber-50 to-white rounded-3xl shadow-xl border-2 border-amber-300 p-6 md:p-8 space-y-6">
@@ -226,7 +220,7 @@
             </div>
           </div>
           <button onclick="hideTahsildarDashboard()" class="self-end md:self-auto text-xs font-bold bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
-            <i data-lucide="log-out" class="w-4 h-4"></i> నిష్క్రమించు
+            <i data-lucide="log-out" class="w-4 h-4"></i> లాగ్ అవుట్
           </button>
         </div>
 
@@ -263,7 +257,7 @@
         </div>
       </div>
 
-      <!-- ప్రత్యక్ష పర్యవేక్షణ నివేదిక & అప్‌లోడ్ చేసిన డాక్యుమెంట్స్ టేబుల్ (డాష్‌బోర్డ్ లోపల మాత్రమే) -->
+      <!-- ప్రత్యక్ష పర్యవేక్షణ నివేదిక టేబుల్ -->
       <div class="glass-card rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
         <div class="px-6 py-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/90">
           <div class="flex items-center gap-3">
@@ -272,7 +266,7 @@
             </div>
             <div>
               <h3 class="text-lg font-black text-slate-800">ప్రత్యక్ష పర్యవేక్షణ నివేదిక & అప్‌లోడ్ డాక్యుమెంట్లు</h3>
-              <p class="text-xs text-slate-500 font-medium">గడువు ముగిసే క్రమం (Lapsing First) లో అమర్చబడింది</p>
+              <p class="text-xs text-slate-500 font-medium">గడువు సమీపించే క్రమంలో (Lapsing Soon) అమర్చబడింది</p>
             </div>
           </div>
           
@@ -297,8 +291,8 @@
                 <th class="px-5 py-3.5">రిఫరెన్స్ & అర్జీ రకం</th>
                 <th class="px-5 py-3.5">అర్జిదారుని పేరు</th>
                 <th class="px-5 py-3.5">సిబ్బంది (VRO/RI)</th>
-                <th class="px-5 py-3.5">గడువు తేదీ (Lapsing Order)</th>
-                <th class="px-5 py-3.5 text-center">అర్జీ ఫైల్ (కాపీ)</th>
+                <th class="px-5 py-3.5">గడువు తేదీ</th>
+                <th class="px-5 py-3.5 text-center">అర్జీ ఫైల్</th>
                 <th class="px-5 py-3.5 text-center">నివేదిక స్థితి</th>
                 <th class="px-5 py-3.5 text-right">రిమైండర్ & చర్యలు</th>
               </tr>
@@ -315,7 +309,7 @@
   </main>
 
   <script>
-    // రహస్య పిన్
+    // పిన్ సెట్
     const TAHSILDAR_PIN = "1234";
 
     document.addEventListener('DOMContentLoaded', () => {
@@ -324,17 +318,13 @@
       initFirebaseAndListen();
     });
 
-    // తహసీల్దార్ మోడల్ ఓపెన్
+    // Prathi sari Password prompt open avthundi
     function openTahsildarModal() {
-      if (sessionStorage.getItem('tahsildar_dash_unlocked') === 'true') {
-        showTahsildarDashboard();
-      } else {
-        document.getElementById('tahsildarAuthOverlay').classList.remove('hidden');
-        document.getElementById('tahsildarPinInput').value = '';
-        document.getElementById('tahsildarAuthError').classList.add('hidden');
-        document.getElementById('tahsildarPinInput').focus();
-        lucide.createIcons();
-      }
+      document.getElementById('tahsildarAuthOverlay').classList.remove('hidden');
+      document.getElementById('tahsildarPinInput').value = '';
+      document.getElementById('tahsildarAuthError').classList.add('hidden');
+      document.getElementById('tahsildarPinInput').focus();
+      lucide.createIcons();
     }
 
     function closeTahsildarModal() {
@@ -343,10 +333,9 @@
 
     document.getElementById('tahsildarAuthForm').addEventListener('submit', (e) => {
       e.preventDefault();
-      const pin = document.getElementById('tahsildarPinInput').value;
+      const pin = document.getElementById('tahsildarPinInput').value.trim();
       const errorMsg = document.getElementById('tahsildarAuthError');
       if (pin === TAHSILDAR_PIN) {
-        sessionStorage.setItem('tahsildar_dash_unlocked', 'true');
         closeTahsildarModal();
         showTahsildarDashboard();
       } else {
@@ -362,12 +351,11 @@
     }
 
     function hideTahsildarDashboard() {
-      sessionStorage.removeItem('tahsildar_dash_unlocked');
       document.getElementById('tahsildarDashboardSection').classList.add('hidden');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Firebase కాన్ఫిగరేషన్
+    // Firebase Credentials
     const firebaseConfig = {
       apiKey: "AIzaSyAPaIA-OPJnKH1X2XZKXG3DF4U-J6UY60Y",
       authDomain: "mropvg-d2e6d.firebaseapp.com",
@@ -527,17 +515,17 @@
       }
     });
 
-    // రిమైండర్ పంపే ఫంక్షన్
-    async function triggerReminderByIndex(docId) {
-      const item = records.find(r => r.docId === docId);
-      if (!item) {
+    // Reminder Click Bug Fix: Index tho direct array lookup
+    async function triggerReminderByIndex(idx) {
+      const item = records[idx];
+      if (!item || !item.docId) {
         alert("రికార్డు గుర్తించబడలేదు.");
         return;
       }
 
       const now = new Date().toISOString();
       try {
-        await db.collection("notices").doc(docId).update({
+        await db.collection("notices").doc(item.docId).update({
           lastReminderAt: now
         });
         dispatchToWhatsApp(item.staffPhone, generateMessageText(item, true));
@@ -546,22 +534,25 @@
       }
     }
 
-    async function toggleStatusByIndex(docId) {
-      const item = records.find(r => r.docId === docId);
-      if (!item) return;
+    async function toggleStatusByIndex(idx) {
+      const item = records[idx];
+      if (!item || !item.docId) return;
 
       const nextStatus = item.status === 'పెండింగ్' ? 'నివేదిక అందింది' : 'పెండింగ్';
       try {
-        await db.collection("notices").doc(docId).update({ status: nextStatus });
+        await db.collection("notices").doc(item.docId).update({ status: nextStatus });
       } catch (err) {
         alert("స్టేటస్ అప్‌డేట్ విఫలమైంది: " + err.message);
       }
     }
 
-    async function deleteRecordByIndex(docId) {
+    async function deleteRecordByIndex(idx) {
+      const item = records[idx];
+      if (!item || !item.docId) return;
+
       if (confirm('ఈ రికార్డును శాశ్వతంగా తొలగించాలనుకుంటున్నారా?')) {
         try {
-          await db.collection("notices").doc(docId).delete();
+          await db.collection("notices").doc(item.docId).delete();
         } catch (err) {
           alert("రికార్డు తొలగింపు విఫలమైంది: " + err.message);
         }
@@ -575,7 +566,7 @@
           loaded.push({ docId: doc.id, ...doc.data() });
         });
 
-        // గడువు తేదీ సమీపిస్తున్న క్రమం (Ascending Order - Lapsing Soon First)
+        // గడువు తేదీ సమీపించే క్రమం (Ascending Order - Lapsing Soon First)
         loaded.sort((a, b) => {
           const timeA = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
           const timeB = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
@@ -641,12 +632,10 @@
 
       const now = new Date().getTime();
 
-      dataToRender.forEach((r) => {
+      dataToRender.forEach((r, idx) => {
         const isClosed = r.status === 'నివేదిక అందింది';
         const dueTime = new Date(r.dueDate).getTime();
         const isOverdue = dueTime < now && !isClosed;
-        
-        // గడువు ఇంకా 24 గంటలలో ముగుస్తుందా?
         const isLapsingSoon = (!isClosed && !isOverdue && (dueTime - now) <= (24 * 60 * 60 * 1000));
 
         const reminderText = (r.lastReminderAt && r.lastReminderAt !== r.sentAt) 
@@ -656,13 +645,13 @@
           : '';
 
         const fileBtn = r.fileInfo 
-          ? `<button onclick="viewFilePreview('${r.docId}')" class="inline-flex items-center gap-1.5 bg-cyan-50 hover:bg-cyan-100 text-cyan-800 font-bold px-3 py-1.5 rounded-xl border border-cyan-300 text-xs shadow-sm transition">
+          ? `<button onclick="viewFilePreview(${idx})" class="inline-flex items-center gap-1.5 bg-cyan-50 hover:bg-cyan-100 text-cyan-800 font-bold px-3 py-1.5 rounded-xl border border-cyan-300 text-xs shadow-sm transition">
                <i data-lucide="eye" class="w-4 h-4 text-cyan-600"></i> చూడండి
              </button>`
           : `<span class="text-slate-400 text-xs italic">ఫైల్ లేదు</span>`;
 
         const row = document.createElement('tr');
-        row.className = `transition border-b border-slate-100 ${isOverdue ? 'bg-rose-50/40 hover:bg-rose-50/70' : isLapsingSoon ? 'bg-amber-50/40 hover:bg-amber-50/70' : 'hover:bg-slate-50'}`;
+        row.className = `transition border-b border-slate-100 ${isOverdue ? 'bg-rose-50/50 hover:bg-rose-50/80' : isLapsingSoon ? 'bg-amber-50/50 hover:bg-amber-50/80' : 'hover:bg-slate-50'}`;
         
         row.innerHTML = `
           <td class="px-5 py-4">
@@ -685,7 +674,7 @@
             ${fileBtn}
           </td>
           <td class="px-5 py-4 text-center">
-            <button onclick="toggleStatusByIndex('${r.docId}')" class="text-xs font-bold px-3 py-1.5 rounded-xl border shadow-sm transition ${isClosed ? 'bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-700' : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-300'}">
+            <button onclick="toggleStatusByIndex(${idx})" class="text-xs font-bold px-3 py-1.5 rounded-xl border shadow-sm transition ${isClosed ? 'bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-700' : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-300'}">
               ${r.status}
             </button>
           </td>
@@ -693,12 +682,12 @@
             <div class="flex flex-col items-end gap-1.5">
               <div class="inline-flex items-center gap-2">
                 ${!isClosed ? `
-                  <button onclick="triggerReminderByIndex('\${r.docId}')" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black px-3 py-1.5 rounded-xl shadow-sm transition active:scale-95 text-xs" title="వాట్సాప్ రిమైండర్ పంపు">
+                  <button onclick="triggerReminderByIndex(\${idx})" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black px-3 py-1.5 rounded-xl shadow-sm transition active:scale-95 text-xs cursor-pointer" title="వాట్సాప్ రిమైండర్ పంపు">
                     <i data-lucide="bell-ring" class="w-4 h-4"></i>
                     రిమైండర్
                   </button>
                 ` : ''}
-                <button onclick="deleteRecordByIndex('${r.docId}')" class="text-slate-400 hover:text-rose-600 p-1.5 rounded-xl hover:bg-rose-50 transition" title="తొలగించు">
+                <button onclick="deleteRecordByIndex(${idx})" class="text-slate-400 hover:text-rose-600 p-1.5 rounded-xl hover:bg-rose-50 transition cursor-pointer" title="తొలగించు">
                   <i data-lucide="trash-2" class="w-4 h-4"></i>
                 </button>
               </div>
@@ -712,8 +701,8 @@
       lucide.createIcons();
     }
 
-    function viewFilePreview(docId) {
-      const item = records.find(r => r.docId === docId);
+    function viewFilePreview(idx) {
+      const item = records[idx];
       if (!item || !item.fileInfo || !item.fileInfo.data) {
         alert("ఈ అర్జీకి సంబంధించిన డాక్యుమెంట్ అందుబాటులో లేదు.");
         return;

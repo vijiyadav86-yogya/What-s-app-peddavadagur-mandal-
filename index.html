@@ -3,13 +3,15 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>తహసీల్దార్ కార్యాలయం - పెద్దవడుగూరు మండలం</title>
   <link rel="manifest" href="manifest.json">
   <script>
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('sw.js');
     }
   </script>
+  <title>తహసీల్దార్ కార్యాలయం - పెద్దవడుగూరు మండలం</title>
+  
+  <!-- Tailwind CSS & Lucide Icons -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://unpkg.com/lucide@latest"></script>
   
@@ -21,8 +23,8 @@
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
     body { font-family: 'Plus Jakarta Sans', sans-serif; }
     .glass-card {
-      background: rgba(255, 255, 255, 0.96);
-      backdrop-filter: blur(14px);
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(16px);
     }
   </style>
 </head>
@@ -30,23 +32,23 @@
 
   <!-- తహసీల్దార్ లాగిన్ విండో -->
   <div id="tahsildarAuthOverlay" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center border-2 border-amber-400">
-      <div class="w-16 h-16 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-inner">
-        <i data-lucide="crown" class="w-8 h-8 text-amber-600"></i>
+    <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-7 text-center border border-amber-300">
+      <div class="w-16 h-16 bg-gradient-to-tr from-amber-500 to-amber-300 text-slate-950 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-amber-500/20">
+        <i data-lucide="shield-check" class="w-8 h-8"></i>
       </div>
       <h2 class="text-xl font-extrabold text-slate-900 mb-1">తహసీల్దార్ వారి లాగిన్</h2>
-      <p class="text-xs text-slate-500 mb-6 font-medium">ప్రత్యేక డాష్‌బోర్డ్ & ఫైళ్ల పర్యవేక్షణ</p>
+      <p class="text-xs text-slate-500 mb-6 font-medium">అధికారిక పర్యవేక్షణ & ఫైళ్ల సమీక్ష</p>
       
       <form id="tahsildarAuthForm" class="space-y-4">
-        <div class="text-left">
-          <label class="block text-xs font-bold text-amber-900 uppercase tracking-wider mb-2 text-center">తహసీల్దార్ పిన్</label>
+        <div>
+          <label class="block text-xs font-bold text-slate-600 uppercase tracking-wider mb-2 text-center">రహస్య పిన్ (PIN)</label>
           <input type="password" id="tahsildarPinInput" placeholder="••••" maxlength="10" required
-            class="w-full bg-amber-50/50 border border-amber-300 rounded-2xl px-4 py-3 text-center text-lg tracking-widest font-black outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white transition">
-          <p id="tahsildarAuthError" class="text-xs text-rose-600 font-bold mt-2 hidden text-center">తప్పుడు పిన్ నమోదు చేసారు!</p>
+            class="w-full bg-slate-50 border border-slate-300 rounded-2xl px-4 py-3 text-center text-xl tracking-widest font-black outline-none focus:ring-2 focus:ring-amber-500 focus:bg-white transition">
+          <p id="tahsildarAuthError" class="text-xs text-rose-600 font-bold mt-2 hidden text-center">సరైన పిన్ నమోదు చేయండి!</p>
         </div>
-        <div class="flex gap-2">
-          <button type="button" onclick="closeTahsildarModal()" class="w-1/2 bg-slate-200 hover:bg-slate-300 text-slate-700 text-xs font-bold py-3 rounded-2xl transition">రద్దు</button>
-          <button type="submit" class="w-1/2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold py-3 rounded-2xl shadow-md transition flex items-center justify-center gap-1.5">
+        <div class="flex gap-2 pt-2">
+          <button type="button" onclick="closeTahsildarModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-3 rounded-2xl transition">రద్దు</button>
+          <button type="submit" class="w-1/2 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-extrabold text-xs py-3 rounded-2xl shadow-md transition flex items-center justify-center gap-1.5">
             <i data-lucide="key" class="w-4 h-4"></i> లాగిన్
           </button>
         </div>
@@ -64,19 +66,19 @@
         <div>
           <div class="flex items-center gap-2">
             <h1 class="text-xl md:text-2xl font-black tracking-tight drop-shadow-sm">తహసీల్దార్ కార్యాలయం</h1>
-            <span class="bg-amber-400/20 text-amber-300 border border-amber-300/30 text-[10px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">లైవ్ డెస్క్</span>
+            <span class="bg-amber-400/20 text-amber-300 border border-amber-300/30 text-[10px] font-bold px-2.5 py-0.5 rounded-full uppercase tracking-wider">లైవ్ డెస్క్</span>
           </div>
-          <p class="text-xs md:text-sm text-teal-100 font-medium">పెద్దవడుగూరు మండలం • రెవెన్యూ & అర్జీల ప్రత్యక్ష పర్యవేక్షణ వేదిక</p>
+          <p class="text-xs md:text-sm text-teal-100 font-medium">పెద్దవడుగూరు మండలం • రెవెన్యూ విభాగం</p>
         </div>
       </div>
 
       <div class="flex flex-wrap items-center gap-2.5">
-        <button onclick="openTahsildarModal()" class="inline-flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black text-xs px-4 py-2 rounded-2xl shadow-md border border-amber-300 transition active:scale-95">
-          <i data-lucide="layout-dashboard" class="w-4 h-4 text-slate-950"></i>
+        <button onclick="openTahsildarModal()" class="inline-flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black text-xs px-4 py-2.5 rounded-2xl shadow-md border border-amber-300 transition active:scale-95">
+          <i data-lucide="shield" class="w-4 h-4 text-slate-950"></i>
           తహసీల్దార్ డాష్‌బోర్డ్
         </button>
 
-        <div class="flex items-center gap-2 bg-emerald-950/60 px-3.5 py-2 rounded-2xl text-xs font-semibold text-emerald-200 border border-emerald-400/30 shadow-sm">
+        <div class="flex items-center gap-2 bg-emerald-950/60 px-3.5 py-2.5 rounded-2xl text-xs font-semibold text-emerald-200 border border-emerald-400/30 shadow-sm">
           <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-ping"></span>
           క్లౌడ్ లైవ్
         </div>
@@ -86,107 +88,31 @@
 
   <main class="max-w-7xl mx-auto px-4 py-8 space-y-8">
 
-    <!-- తహసీల్దార్ ప్రత్యేక పర్యవేక్షణ ప్యానెల్ -->
-    <section id="tahsildarDashboardSection" class="hidden bg-gradient-to-b from-amber-50/80 to-white rounded-3xl shadow-xl border-2 border-amber-300 p-6 md:p-8 space-y-6">
-      <div class="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-amber-200 gap-3">
-        <div class="flex items-center gap-3">
-          <div class="p-3 bg-amber-500 text-slate-950 rounded-2xl shadow-sm">
-            <i data-lucide="crown" class="w-6 h-6"></i>
-          </div>
-          <div>
-            <h2 class="text-lg md:text-xl font-black text-slate-900">తహసీల్దార్ ప్రత్యేక పర్యవేక్షణ వేదిక</h2>
-            <p class="text-xs text-slate-600 font-semibold">ల్యాప్స్ అవుతున్న అర్జీల ప్రాధాన్యత క్రమం (Earliest Due First)</p>
-          </div>
-        </div>
-        <button onclick="hideTahsildarDashboard()" class="self-end md:self-auto text-xs font-bold bg-slate-200 hover:bg-slate-300 text-slate-700 px-3 py-1.5 rounded-xl transition flex items-center gap-1">
-          <i data-lucide="x" class="w-3.5 h-3.5"></i> డాష్‌బోర్డ్ మూసివేయి
-        </button>
-      </div>
-
-      <!-- కౌంటర్స్ -->
-      <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
-        <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p class="text-[11px] font-bold text-slate-500 uppercase">మొత్తం అర్జీలు</p>
-            <h4 id="dashTotal" class="text-2xl font-black text-slate-800">0</h4>
-          </div>
-          <div class="p-2.5 bg-blue-50 text-blue-600 rounded-xl"><i data-lucide="layers" class="w-5 h-5"></i></div>
-        </div>
-        <div class="bg-white p-4 rounded-2xl border border-amber-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p class="text-[11px] font-bold text-amber-700 uppercase">పెండింగ్ అర్జీలు</p>
-            <h4 id="dashPending" class="text-2xl font-black text-amber-600">0</h4>
-          </div>
-          <div class="p-2.5 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="clock" class="w-5 h-5"></i></div>
-        </div>
-        <div class="bg-white p-4 rounded-2xl border border-rose-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p class="text-[11px] font-bold text-rose-700 uppercase">గడువు ముగిసినవి</p>
-            <h4 id="dashOverdue" class="text-2xl font-black text-rose-600">0</h4>
-          </div>
-          <div class="p-2.5 bg-rose-50 text-rose-600 rounded-xl"><i data-lucide="alert-triangle" class="w-5 h-5"></i></div>
-        </div>
-        <div class="bg-white p-4 rounded-2xl border border-emerald-200 shadow-sm flex items-center justify-between">
-          <div>
-            <p class="text-[11px] font-bold text-emerald-700 uppercase">నివేదిక వచ్చినవి</p>
-            <h4 id="dashClosed" class="text-2xl font-black text-emerald-600">0</h4>
-          </div>
-          <div class="p-2.5 bg-emerald-50 text-emerald-600 rounded-xl"><i data-lucide="check-circle" class="w-5 h-5"></i></div>
-        </div>
-      </div>
-
-      <!-- డాష్‌బోర్డ్ ఫైల్స్ టేబుల్ -->
-      <div class="bg-white rounded-2xl border border-slate-200 p-5 space-y-4">
-        <div class="flex items-center justify-between">
-          <h3 class="text-sm font-bold text-slate-800 flex items-center gap-2">
-            <i data-lucide="folder-archive" class="w-4 h-4 text-amber-600"></i> అప్‌లోడ్ చేసిన అర్జీలు & సిబ్బంది కేటాయింపులు (ల్యాప్సింగ్ ఆధారంగా)
-          </h3>
-          <span class="text-xs text-amber-700 font-semibold bg-amber-50 px-2.5 py-1 rounded-lg border border-amber-200">ముగింపు గడువు దగ్గర ఉన్నవి పైభాగంలో ఉంటాయి</span>
-        </div>
-
-        <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs text-slate-600">
-            <thead class="bg-slate-50 border-b border-slate-200 text-slate-500 uppercase font-bold text-[10px]">
-              <tr>
-                <th class="px-4 py-2.5">పరిష్కార గడువు తేదీ</th>
-                <th class="px-4 py-2.5">రిఫరెన్స్ నంబర్</th>
-                <th class="px-4 py-2.5">అర్జిదారుని పేరు</th>
-                <th class="px-4 py-2.5">అర్జీ రకం</th>
-                <th class="px-4 py-2.5">సిబ్బంది (VRO/RI)</th>
-                <th class="px-4 py-2.5">స్థితి</th>
-                <th class="px-4 py-2.5 text-center">అప్‌లోడ్ డాక్యుమెంట్</th>
-              </tr>
-            </thead>
-            <tbody id="tahsildarFilesTableBody" class="divide-y divide-slate-100 font-medium">
-              <!-- డైనమిక్‌గా లోడ్ అవుతుంది -->
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- ఆదేశాలు జారీ చేసే ఫారమ్ -->
-    <div class="glass-card rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
-      <div class="border-b border-slate-100 bg-slate-50/80 px-6 py-4 flex items-center justify-between">
+    <!-- ఆదేశాలు జారీ చేసే ఫారమ్ (అందరికీ అందుబాటులో ఉండే భాగం) -->
+    <div class="glass-card rounded-3xl shadow-lg border border-slate-200/90 overflow-hidden">
+      <div class="border-b border-slate-100 bg-slate-50/90 px-6 py-4 flex items-center justify-between">
         <div class="flex items-center space-x-2.5">
-          <div class="p-1.5 bg-teal-100 text-teal-800 rounded-xl">
-            <i data-lucide="file-output" class="w-5 h-5"></i>
+          <div class="p-2 bg-teal-100 text-teal-800 rounded-xl">
+            <i data-lucide="send" class="w-5 h-5 text-teal-700"></i>
           </div>
-          <h2 class="text-base font-bold text-slate-800">సిబ్బందికి ఆదేశాల జారీ & విచారణ కేటాయింపు</h2>
+          <div>
+            <h2 class="text-base font-extrabold text-slate-800">సిబ్బందికి ఆదేశాల జారీ & విచారణ కేటాయింపు</h2>
+            <p class="text-xs text-slate-500">అర్జీని నమోదు చేసి సిబ్బందికి తక్షణమే వాట్సాప్ ఆదేశం పంపండి</p>
+          </div>
         </div>
         <span class="text-xs font-semibold text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-200 flex items-center gap-1.5">
-          <i data-lucide="check-check" class="w-3.5 h-3.5"></i> వాట్సాప్ నోటీస్ జారీ
+          <i data-lucide="check-check" class="w-3.5 h-3.5"></i> వాట్సాప్ నోటీస్ సదుపాయం
         </span>
       </div>
 
       <form id="dispatchForm" class="p-6 md:p-8 space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
-          <!-- అర్జీ రకం డ్రాప్‌డౌన్ -->
+          <!-- అర్జీ రకం -->
           <div>
             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">అర్జీ రకం (Revenue Category)</label>
             <div class="relative">
-              <select id="appType" required class="w-full bg-slate-50/80 border border-slate-300 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition appearance-none font-medium shadow-sm">
+              <select id="appType" required class="w-full bg-slate-50 border border-slate-300 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition appearance-none font-medium shadow-sm">
                 <option value="ROR">ROR</option>
                 <option value="PGRS (PGRS / మీసేవ)">PGRS అర్జీ</option>
                 <option value="మండలo అప్లికేషన్">మండలo అప్లికేషన్</option>
@@ -205,7 +131,7 @@
           <div>
             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">అర్జిదారుని పేరు (Applicant Name)</label>
             <div class="relative">
-              <input type="text" id="applicantName" placeholder="ఉదా: జి. విజయ్" required class="w-full bg-slate-50/80 border border-slate-300 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition font-medium shadow-sm">
+              <input type="text" id="applicantName" placeholder="ఉదా: రామాంజనేయులు" required class="w-full bg-slate-50 border border-slate-300 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition font-medium shadow-sm">
               <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5"></i>
             </div>
           </div>
@@ -214,21 +140,21 @@
           <div>
             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">రిఫరెన్స్ / అర్జీ నంబర్</label>
             <div class="relative">
-              <input type="text" id="refNo" placeholder="F-8/2026/నోటీస్-12" required class="w-full bg-slate-50/80 border border-slate-300 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition font-medium shadow-sm">
+              <input type="text" id="refNo" placeholder="F-8/2026/నోటీస్-12" required class="w-full bg-slate-50 border border-slate-300 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition font-medium shadow-sm">
               <i data-lucide="hash" class="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5"></i>
             </div>
           </div>
 
-          <!-- సిబ్బంది వివరాలు & కాంటాక్ట్ పికర్ -->
+          <!-- సిబ్బంది వివరాలు & ఫోన్ నంబర్ -->
           <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
               <div class="flex items-center justify-between mb-2">
                 <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">సిబ్బంది పేరు (Staff / VRO)</label>
-                <button type="button" onclick="pickPhoneContact()" class="text-xs text-teal-700 hover:text-teal-800 flex items-center gap-1 font-bold">
-                  <i data-lucide="contact-2" class="w-4 h-4 text-teal-600"></i> కాంటాక్ట్ ఎంచుకో
+                <button type="button" onclick="pickPhoneContact()" class="text-xs text-teal-700 hover:text-teal-900 flex items-center gap-1 font-bold">
+                  <i data-lucide="contact-2" class="w-3.5 h-3.5"></i> కాంటాక్ట్ ఎంచుకో
                 </button>
               </div>
-              <input type="text" id="staffName" placeholder="సిబ్బంది పేరు నమోదు చేయండి" required class="w-full bg-slate-50/80 border border-slate-300 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition font-medium shadow-sm">
+              <input type="text" id="staffName" placeholder="సిబ్బంది పేరు నమోదు చేయండి" required class="w-full bg-slate-50 border border-slate-300 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition font-medium shadow-sm">
             </div>
 
             <div>
@@ -237,7 +163,7 @@
                 <span class="inline-flex items-center px-4 border border-r-0 border-slate-300 bg-slate-100 text-slate-700 text-sm font-bold">
                   🇮🇳 +91
                 </span>
-                <input type="tel" id="staffPhone" pattern="[0-9]{10}" maxlength="10" placeholder="9876543210" required class="w-full bg-slate-50/80 border border-slate-300 rounded-r-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition font-medium">
+                <input type="tel" id="staffPhone" pattern="[0-9]{10}" maxlength="10" placeholder="9876543210" required class="w-full bg-slate-50 border border-slate-300 rounded-r-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition font-medium">
               </div>
             </div>
           </div>
@@ -246,16 +172,16 @@
           <div>
             <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">అర్జీ కాపీ (PDF / JPG)</label>
             <div class="relative">
-              <input type="file" id="fileUpload" accept="application/pdf,image/jpeg,image/png" class="w-full text-xs text-slate-500 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-teal-50 file:text-teal-800 hover:file:bg-teal-100 border border-slate-300 rounded-2xl p-1.5 bg-slate-50/80 shadow-sm cursor-pointer">
+              <input type="file" id="fileUpload" accept="application/pdf,image/jpeg,image/png" class="w-full text-xs text-slate-500 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-teal-50 file:text-teal-800 hover:file:bg-teal-100 border border-slate-300 rounded-2xl p-1.5 bg-slate-50 shadow-sm cursor-pointer">
             </div>
           </div>
 
           <!-- గడువు లెక్కింపు -->
-          <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-4 bg-gradient-to-r from-teal-50 via-emerald-50 to-teal-50 p-5 rounded-2xl border border-teal-200/80">
+          <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-4 bg-gradient-to-r from-teal-50/80 via-emerald-50/80 to-teal-50/80 p-5 rounded-2xl border border-teal-200">
             <div>
-              <label class="block text-xs font-bold text-teal-900 uppercase tracking-wider mb-2">గడువు రోజులు (1-10 ఎంపిక)</label>
+              <label class="block text-xs font-bold text-teal-950 uppercase tracking-wider mb-2">గడువు రోజులు (ఎంపిక)</label>
               <select id="presetDays" onchange="applyPresetDays(this.value)" class="w-full bg-white border border-teal-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-teal-600 outline-none font-semibold">
-                <option value="1">1 రోజు</option>
+                <option value="1">1 రోజు (తక్షణ ప్రాధాన్యత)</option>
                 <option value="2">2 రోజులు</option>
                 <option value="3" selected>3 రోజులు</option>
                 <option value="5">5 రోజులు</option>
@@ -265,87 +191,140 @@
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-teal-900 uppercase tracking-wider mb-2">కస్టమ్ రోజులు నమోదు</label>
-              <input type="number" id="manualDays" min="1" placeholder="రోజులు" oninput="calculateCustomDate(this.value)" class="w-full bg-white border border-teal-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-teal-600 outline-none font-semibold">
+              <label class="block text-xs font-bold text-teal-950 uppercase tracking-wider mb-2">కస్టమ్ రోజులు నమోదు</label>
+              <input type="number" id="manualDays" min="1" placeholder="రోజుల సంఖ్య" oninput="calculateCustomDate(this.value)" class="w-full bg-white border border-teal-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-teal-600 outline-none font-semibold">
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-teal-900 uppercase tracking-wider mb-2">పరిష్కార గడువు తేదీ & సమయం</label>
-              <input type="datetime-local" id="dueDate" required class="w-full bg-white border border-teal-300 rounded-xl px-4 py-2.5 text-sm text-teal-900 font-bold outline-none">
+              <label class="block text-xs font-bold text-teal-950 uppercase tracking-wider mb-2">పరిష్కార గడువు తేదీ & సమయం</label>
+              <input type="datetime-local" id="dueDate" required class="w-full bg-white border border-teal-300 rounded-xl px-4 py-2.5 text-sm text-teal-950 font-black outline-none">
             </div>
           </div>
 
         </div>
 
-        <!-- సబ్మిట్ బటన్ -->
-        <div class="flex flex-col sm:flex-row items-center justify-end gap-3 pt-4 border-t border-slate-100">
-          <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white text-sm font-bold px-7 py-3 rounded-2xl shadow-lg shadow-emerald-700/20 active:scale-95 transition">
-            <i data-lucide="send" class="w-4 h-4"></i> WhatsApp లో ఆదేశాలు పంపు & సేవ్ చేయి
+        <div class="flex justify-end pt-4 border-t border-slate-100">
+          <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white text-sm font-bold px-8 py-3.5 rounded-2xl shadow-lg shadow-emerald-700/20 active:scale-95 transition">
+            <i data-lucide="send" class="w-4 h-4"></i> WhatsApp లో ఆదేశాలు పంపు & క్లౌడ్‌లో సేవ్ చేయి
           </button>
         </div>
       </form>
     </div>
 
-    <!-- ప్రత్యక్ష పర్యవేక్షణ నివేదిక టేబుల్ -->
-    <div class="glass-card rounded-3xl shadow-lg border border-slate-200 overflow-hidden">
-      <div class="px-6 py-4 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/80">
-        <div class="flex items-center gap-2.5">
-          <div class="p-2 bg-teal-100 text-teal-800 rounded-xl">
-            <i data-lucide="clipboard-list" class="w-5 h-5 text-teal-700"></i>
+    <!-- తహసీల్దార్ ప్రత్యేక పర్యవేక్షణ విభాగం (పాస్‌వర్డ్ 1234 నమోదు చేస్తేనే కనిపిస్తుంది) -->
+    <section id="tahsildarDashboardSection" class="hidden space-y-8">
+      
+      <div class="bg-gradient-to-br from-amber-500/10 via-amber-50 to-white rounded-3xl shadow-xl border-2 border-amber-300 p-6 md:p-8 space-y-6">
+        <div class="flex flex-col md:flex-row md:items-center justify-between pb-4 border-b border-amber-200 gap-3">
+          <div class="flex items-center gap-3.5">
+            <div class="p-3 bg-amber-500 text-slate-950 rounded-2xl shadow-md shadow-amber-500/30">
+              <i data-lucide="crown" class="w-7 h-7"></i>
+            </div>
+            <div>
+              <h2 class="text-xl md:text-2xl font-black text-slate-900">తహసీల్దార్ ప్రత్యేక పర్యవేక్షణ డెస్క్</h2>
+              <p class="text-xs text-amber-950 font-bold">గడువు ముగుస్తున్న అర్జీల ప్రాధాన్యత ఆధారంగా (Ascending Order / Lapsing Soon First)</p>
+            </div>
           </div>
-          <div>
-            <h3 class="text-base font-bold text-slate-800">ప్రత్యక్ష పర్యవేక్షణ నివేదిక</h3>
-            <p class="text-xs text-slate-500 font-medium">అర్జీల కేటాయింపు, గడువు తేదీలు మరియు నివేదిక స్థితి</p>
-          </div>
-        </div>
-        
-        <div class="flex flex-wrap items-center gap-3">
-          <div class="relative">
-            <input type="text" id="searchInput" oninput="filterRecords()" placeholder="రిఫరెన్స్ / పేరు శోధించండి..." class="bg-white border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-xs outline-none focus:ring-2 focus:ring-teal-500 w-52 font-medium shadow-sm">
-            <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5"></i>
-          </div>
-
-          <button onclick="exportToCSV()" class="inline-flex items-center gap-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold px-3.5 py-2 rounded-xl transition border border-emerald-300 shadow-sm">
-            <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-600"></i> Excel/CSV డౌన్‌లోడ్
+          <button onclick="hideTahsildarDashboard()" class="self-end md:self-auto text-xs font-bold bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+            <i data-lucide="log-out" class="w-4 h-4"></i> నిష్క్రమించు
           </button>
+        </div>
 
-          <div class="text-xs font-bold text-teal-800 bg-teal-100/70 px-3 py-2 rounded-xl" id="statsCount">మొత్తం: 0</div>
+        <!-- కౌంటర్స్ -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-[11px] font-bold text-slate-500 uppercase">మొత్తం అర్జీలు</p>
+              <h4 id="dashTotal" class="text-3xl font-black text-slate-800 mt-1">0</h4>
+            </div>
+            <div class="p-3 bg-blue-50 text-blue-600 rounded-xl"><i data-lucide="layers" class="w-6 h-6"></i></div>
+          </div>
+          <div class="bg-white p-4 rounded-2xl border border-amber-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-[11px] font-bold text-amber-700 uppercase">పెండింగ్ అర్జీలు</p>
+              <h4 id="dashPending" class="text-3xl font-black text-amber-600 mt-1">0</h4>
+            </div>
+            <div class="p-3 bg-amber-50 text-amber-600 rounded-xl"><i data-lucide="clock" class="w-6 h-6"></i></div>
+          </div>
+          <div class="bg-white p-4 rounded-2xl border border-rose-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-[11px] font-bold text-rose-700 uppercase">గడువు ముగిసినవి</p>
+              <h4 id="dashOverdue" class="text-3xl font-black text-rose-600 mt-1">0</h4>
+            </div>
+            <div class="p-3 bg-rose-50 text-rose-600 rounded-xl"><i data-lucide="alert-octagon" class="w-6 h-6"></i></div>
+          </div>
+          <div class="bg-white p-4 rounded-2xl border border-emerald-200 shadow-sm flex items-center justify-between">
+            <div>
+              <p class="text-[11px] font-bold text-emerald-700 uppercase">నివేదిక వచ్చినవి</p>
+              <h4 id="dashClosed" class="text-3xl font-black text-emerald-600 mt-1">0</h4>
+            </div>
+            <div class="p-3 bg-emerald-50 text-emerald-600 rounded-xl"><i data-lucide="check-circle-2" class="w-6 h-6"></i></div>
+          </div>
         </div>
       </div>
 
-      <div class="overflow-x-auto">
-        <table class="w-full text-left text-sm text-slate-600">
-          <thead class="bg-slate-100/80 border-b border-slate-200 text-[11px] font-bold text-slate-500 uppercase tracking-wider">
-            <tr>
-              <th class="px-5 py-3.5">రిఫరెన్స్ & అర్జీ రకం</th>
-              <th class="px-5 py-3.5">అర్జిదారుని పేరు</th>
-              <th class="px-5 py-3.5">సిబ్బంది (VRO/RI)</th>
-              <th class="px-5 py-3.5">పంపిన / రిమైండర్ సమయం</th>
-              <th class="px-5 py-3.5">పరిష్కార గడువు తేదీ</th>
-              <th class="px-5 py-3.5">నివేదిక స్థితి</th>
-              <th class="px-5 py-3.5 text-right">చర్యలు</th>
-            </tr>
-          </thead>
-          <tbody id="dispatchTableBody" class="divide-y divide-slate-100 font-medium">
-            <!-- డైనమిక్‌గా లోడ్ అవుతుంది -->
-          </tbody>
-        </table>
+      <!-- ప్రత్యక్ష పర్యవేక్షణ నివేదిక & అప్‌లోడ్ చేసిన డాక్యుమెంట్స్ టేబుల్ (డాష్‌బోర్డ్ లోపల మాత్రమే) -->
+      <div class="glass-card rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
+        <div class="px-6 py-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/90">
+          <div class="flex items-center gap-3">
+            <div class="p-2.5 bg-amber-100 text-amber-900 rounded-xl">
+              <i data-lucide="clipboard-list" class="w-6 h-6"></i>
+            </div>
+            <div>
+              <h3 class="text-lg font-black text-slate-800">ప్రత్యక్ష పర్యవేక్షణ నివేదిక & అప్‌లోడ్ డాక్యుమెంట్లు</h3>
+              <p class="text-xs text-slate-500 font-medium">గడువు ముగిసే క్రమం (Lapsing First) లో అమర్చబడింది</p>
+            </div>
+          </div>
+          
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="relative">
+              <input type="text" id="searchInput" oninput="filterRecords()" placeholder="రిఫరెన్స్ / పేరు శోధించండి..." class="bg-white border border-slate-300 rounded-xl pl-9 pr-3 py-2 text-xs outline-none focus:ring-2 focus:ring-teal-500 w-56 font-medium shadow-sm">
+              <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-2.5 top-2.5"></i>
+            </div>
+
+            <button onclick="exportToCSV()" class="inline-flex items-center gap-1.5 bg-emerald-50 hover:bg-emerald-100 text-emerald-800 text-xs font-bold px-3.5 py-2 rounded-xl transition border border-emerald-300 shadow-sm">
+              <i data-lucide="file-spreadsheet" class="w-4 h-4 text-emerald-600"></i> Excel/CSV డౌన్‌లోడ్
+            </button>
+
+            <div class="text-xs font-bold text-amber-900 bg-amber-100 px-3.5 py-2 rounded-xl" id="statsCount">మొత్తం: 0</div>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-sm text-slate-600">
+            <thead class="bg-slate-100 border-b border-slate-200 text-[11px] font-black text-slate-600 uppercase tracking-wider">
+              <tr>
+                <th class="px-5 py-3.5">రిఫరెన్స్ & అర్జీ రకం</th>
+                <th class="px-5 py-3.5">అర్జిదారుని పేరు</th>
+                <th class="px-5 py-3.5">సిబ్బంది (VRO/RI)</th>
+                <th class="px-5 py-3.5">గడువు తేదీ (Lapsing Order)</th>
+                <th class="px-5 py-3.5 text-center">అర్జీ ఫైల్ (కాపీ)</th>
+                <th class="px-5 py-3.5 text-center">నివేదిక స్థితి</th>
+                <th class="px-5 py-3.5 text-right">రిమైండర్ & చర్యలు</th>
+              </tr>
+            </thead>
+            <tbody id="dispatchTableBody" class="divide-y divide-slate-100 font-medium">
+              <!-- డైనమిక్‌గా లోడ్ అవుతుంది -->
+            </tbody>
+          </table>
+        </div>
       </div>
-    </div>
+
+    </section>
 
   </main>
 
   <script>
+    // రహస్య పిన్
     const TAHSILDAR_PIN = "1234";
 
-    // అప్లికేషన్ ప్రారంభం
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
       applyPresetDays(3);
       initFirebaseAndListen();
     });
 
-    // తహసీల్దార్ డాష్‌బోర్డ్ వెరిఫికేషన్
+    // తహసీల్దార్ మోడల్ ఓపెన్
     function openTahsildarModal() {
       if (sessionStorage.getItem('tahsildar_dash_unlocked') === 'true') {
         showTahsildarDashboard();
@@ -378,15 +357,17 @@
 
     function showTahsildarDashboard() {
       document.getElementById('tahsildarDashboardSection').classList.remove('hidden');
-      renderTahsildarDashboard();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      renderDashboardAndTable();
+      document.getElementById('tahsildarDashboardSection').scrollIntoView({ behavior: 'smooth' });
     }
 
     function hideTahsildarDashboard() {
+      sessionStorage.removeItem('tahsildar_dash_unlocked');
       document.getElementById('tahsildarDashboardSection').classList.add('hidden');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Firebase Config
+    // Firebase కాన్ఫిగరేషన్
     const firebaseConfig = {
       apiKey: "AIzaSyAPaIA-OPJnKH1X2XZKXG3DF4U-J6UY60Y",
       authDomain: "mropvg-d2e6d.firebaseapp.com",
@@ -456,7 +437,7 @@
           alert('కాంటాక్ట్ ఎంపిక విఫలమైంది: ' + err.message);
         }
       } else {
-        alert('ఈ బ్రౌజర్‌లో కాంటాక్ట్ పికర్ సపోర్ట్ లేదు. వివరాలను నేరుగా టైప్ చేయండి.');
+        alert('ఈ బ్రౌజర్‌లో కాంటాక్ట్ పికర్ సపోర్ట్ లేదు. ఫోన్ నంబర్‌ను నేరుగా టైప్ చేయండి.');
       }
     }
 
@@ -467,8 +448,11 @@
     }
 
     function generateMessageText(item, isReminder = false) {
-      const header = isReminder ? `⚠️ *రిమైండర్ - తహసీల్దార్ వారి కార్యాలయం, పెద్దవడుగూరు*` : `*తహసీల్దార్ వారి కార్యాలయం, పెద్దవడుగూరు*`;
-      return `${header}\n━━━━━━━━━━━━━━━━━━━━\n📌 *ఆదేశాలు / విచారణ నివేదిక కొరకు*\n\n👤 *సిబ్బంది పేరు:* ${item.staffName}\n📂 *అర్జీ రకం :* ${item.appType}\n👤 *అర్జిదారుని పేరు :* ${item.applicantName}\n📄 *రిఫరెన్స్ నంబర్:* ${item.refNo}\n📅 *పరిష్కార గడువు తేదీ:* ${item.dueDate ? item.dueDate.replace('T', ' ') : 'N/A'}\n\n⚠️ *గమనిక:* నిర్ణీత గడువులోగా క్షేత్రస్థాయి విచారణ పూర్తి చేసి నివేదిక సమర్పించవలసిందిగా ఆదేశించడమైనది.`;
+      const header = isReminder 
+        ? `🚨 *అత్యవసర రిమైండర్ - తహసీల్దార్ వారి కార్యాలయం, పెద్దవడుగూరు*` 
+        : `*తహసీల్దార్ వారి కార్యాలయం, పెద్దవడుగూరు*`;
+
+      return `${header}\n━━━━━━━━━━━━━━━━━━━━\n📌 *ఆదేశాలు / విచారణ నివేదిక కొరకు*\n\n👤 *సిబ్బంది పేరు:* ${item.staffName}\n📂 *అర్జీ రకం :* ${item.appType}\n👤 *అర్జిదారుని పేరు :* ${item.applicantName}\n📄 *రిఫరెన్స్ నంబర్:* ${item.refNo}\n📅 *పరిష్కార గడువు తేదీ:* ${item.dueDate ? item.dueDate.replace('T', ' ') : 'N/A'}\n\n⚠️ *గమనిక:* గడువు సమీపిస్తున్నందున తక్షణమే క్షేత్రస్థాయి విచారణ పూర్తి చేసి నివేదిక సమర్పించవలసిందిగా ఆదేశించడమైనది.`;
     }
 
     function dispatchToWhatsApp(phone, text) {
@@ -536,23 +520,24 @@
         dispatchToWhatsApp(item.staffPhone, generateMessageText(item));
         document.getElementById('dispatchForm').reset();
         applyPresetDays(3);
+        alert('ఆదేశాలు విజయవంతంగా జారీ చేయబడ్డాయి & క్లౌడ్‌లో భద్రపరచబడ్డాయి.');
       } catch (err) {
         console.error("Save Error:", err);
         alert("క్లౌడ్‌లో సేవ్ చేయడం విఫలమైంది: " + err.message);
       }
     });
 
-    // రిమైండర్ ట్రిగ్గర్ లాజిక్ (Fix)
-    async function triggerReminderByIndex(index) {
-      const item = records[index];
-      if (!item || !item.docId) {
+    // రిమైండర్ పంపే ఫంక్షన్
+    async function triggerReminderByIndex(docId) {
+      const item = records.find(r => r.docId === docId);
+      if (!item) {
         alert("రికార్డు గుర్తించబడలేదు.");
         return;
       }
 
       const now = new Date().toISOString();
       try {
-        await db.collection("notices").doc(item.docId).update({
+        await db.collection("notices").doc(docId).update({
           lastReminderAt: now
         });
         dispatchToWhatsApp(item.staffPhone, generateMessageText(item, true));
@@ -561,25 +546,22 @@
       }
     }
 
-    async function toggleStatusByIndex(index) {
-      const item = records[index];
-      if (!item || !item.docId) return;
+    async function toggleStatusByIndex(docId) {
+      const item = records.find(r => r.docId === docId);
+      if (!item) return;
 
       const nextStatus = item.status === 'పెండింగ్' ? 'నివేదిక అందింది' : 'పెండింగ్';
       try {
-        await db.collection("notices").doc(item.docId).update({ status: nextStatus });
+        await db.collection("notices").doc(docId).update({ status: nextStatus });
       } catch (err) {
         alert("స్టేటస్ అప్‌డేట్ విఫలమైంది: " + err.message);
       }
     }
 
-    async function deleteRecordByIndex(index) {
-      const item = records[index];
-      if (!item || !item.docId) return;
-
+    async function deleteRecordByIndex(docId) {
       if (confirm('ఈ రికార్డును శాశ్వతంగా తొలగించాలనుకుంటున్నారా?')) {
         try {
-          await db.collection("notices").doc(item.docId).delete();
+          await db.collection("notices").doc(docId).delete();
         } catch (err) {
           alert("రికార్డు తొలగింపు విఫలమైంది: " + err.message);
         }
@@ -587,14 +569,23 @@
     }
 
     function listenToRealtimeUpdates() {
-      db.collection("notices").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
-        records = [];
+      db.collection("notices").onSnapshot((snapshot) => {
+        let loaded = [];
         snapshot.forEach((doc) => {
-          records.push({ docId: doc.id, ...doc.data() });
+          loaded.push({ docId: doc.id, ...doc.data() });
         });
-        renderTable(records);
+
+        // గడువు తేదీ సమీపిస్తున్న క్రమం (Ascending Order - Lapsing Soon First)
+        loaded.sort((a, b) => {
+          const timeA = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
+          const timeB = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
+          return timeA - timeB;
+        });
+
+        records = loaded;
+
         if (!document.getElementById('tahsildarDashboardSection').classList.contains('hidden')) {
-          renderTahsildarDashboard();
+          renderDashboardAndTable();
         }
       }, (error) => {
         console.error("Firestore Error: ", error);
@@ -609,80 +600,10 @@
         (r.staffName && r.staffName.toLowerCase().includes(q)) ||
         (r.appType && r.appType.toLowerCase().includes(q))
       );
-      renderTable(filtered);
+      renderTableOnly(filtered);
     }
 
-    // ప్రధాన పర్యవేక్షణ టేబుల్ (ఇక్కడ డాక్యుమెంట్ ప్రివ్యూ ఉండదు)
-    function renderTable(dataToRender) {
-      const tbody = document.getElementById('dispatchTableBody');
-      const stats = document.getElementById('statsCount');
-      tbody.innerHTML = '';
-      stats.innerText = `మొత్తం: ${dataToRender.length}`;
-
-      if (dataToRender.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-10 text-center text-slate-400 font-semibold">రికార్డులు ఏవీ లేవు</td></tr>`;
-        return;
-      }
-
-      const now = new Date().getTime();
-
-      dataToRender.forEach((r, idx) => {
-        const isClosed = r.status === 'నివేదిక అందింది';
-        const dueTime = new Date(r.dueDate).getTime();
-        const isOverdue = dueTime < now && !isClosed;
-
-        const reminderHtml = (r.lastReminderAt && r.lastReminderAt !== r.sentAt) 
-          ? `<div class="flex items-center gap-1 text-amber-700 font-semibold mt-1"><i data-lucide="bell" class="w-3 h-3 text-amber-600"></i> రిమైండర్: ${formatReadableTime(r.lastReminderAt)}</div>`
-          : '';
-
-        const row = document.createElement('tr');
-        row.className = 'hover:bg-slate-50/90 transition border-b border-slate-100';
-        row.innerHTML = `
-          <td class="px-5 py-4">
-            <div class="font-extrabold text-slate-900">${r.refNo}</div>
-            <div class="text-xs text-teal-700 font-semibold">${r.appType}</div>
-          </td>
-          <td class="px-5 py-4 text-slate-800 font-semibold">${r.applicantName}</td>
-          <td class="px-5 py-4">
-            <div class="font-bold text-slate-800">${r.staffName}</div>
-            <div class="text-xs text-slate-500 font-mono">+91 ${r.staffPhone}</div>
-          </td>
-          <td class="px-5 py-4 text-xs font-medium text-slate-600">
-            <div class="flex items-center gap-1 text-slate-700">
-              <i data-lucide="send" class="w-3 h-3 text-teal-600"></i> ${formatReadableTime(r.sentAt)}
-            </div>
-            ${reminderHtml}
-          </td>
-          <td class="px-5 py-4 font-mono text-xs font-bold ${isOverdue ? 'text-rose-600' : 'text-slate-700'}">
-            ${r.dueDate ? r.dueDate.replace('T', ' ') : 'N/A'}
-            ${isOverdue ? '<span class="block text-[10px] text-rose-500 font-semibold">(గడువు ముగిసింది)</span>' : ''}
-          </td>
-          <td class="px-5 py-4">
-            <button onclick="toggleStatusByIndex(${idx})" class="text-xs font-bold px-3 py-1.5 rounded-xl border shadow-sm transition ${isClosed ? 'bg-emerald-600 text-white border-emerald-600' : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-300'}">
-              ${r.status}
-            </button>
-          </td>
-          <td class="px-5 py-4 text-right">
-            <div class="inline-flex items-center gap-1.5">
-              ${!isClosed ? `
-                <button onclick="triggerReminderByIndex(\${idx})" class="p-1.5 bg-amber-50 hover:bg-amber-100 text-amber-700 rounded-lg border border-amber-200 transition" title="రిమైండర్ పంపు">
-                  <i data-lucide="bell-ring" class="w-4 h-4"></i>
-                </button>
-              ` : ''}
-              <button onclick="deleteRecordByIndex(${idx})" class="text-slate-400 hover:text-rose-600 p-1.5 rounded-lg transition" title="తొలగించు">
-                <i data-lucide="trash-2" class="w-4 h-4"></i>
-              </button>
-            </div>
-          </td>
-        `;
-        tbody.appendChild(row);
-      });
-
-      lucide.createIcons();
-    }
-
-    // తహసీల్దార్ డాష్‌బోర్డ్: అప్‌లోడ్ డాక్యుమెంట్లతో మరియు గడువు సమీపించే ఆర్డర్‌లో (Ascending)
-    function renderTahsildarDashboard() {
+    function renderDashboardAndTable() {
       const total = records.length;
       let closed = 0;
       let overdue = 0;
@@ -704,49 +625,86 @@
       document.getElementById('dashOverdue').innerText = overdue;
       document.getElementById('dashClosed').innerText = closed;
 
-      const tbody = document.getElementById('tahsildarFilesTableBody');
-      tbody.innerHTML = '';
+      renderTableOnly(records);
+    }
 
-      if (records.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="7" class="px-4 py-6 text-center text-slate-400">అర్జీలు లేవు</td></tr>`;
+    function renderTableOnly(dataToRender) {
+      const tbody = document.getElementById('dispatchTableBody');
+      const stats = document.getElementById('statsCount');
+      tbody.innerHTML = '';
+      stats.innerText = `మొత్తం అర్జీలు: ${dataToRender.length}`;
+
+      if (dataToRender.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="7" class="px-6 py-12 text-center text-slate-400 font-semibold">రికార్డులు ఏవీ లేవు</td></tr>`;
         return;
       }
 
-      // ల్యాప్సింగ్ తేదీ ఆధారంగా ఎసెండింగ్ సార్ట్ (ల్యాప్స్ దగ్గరగా ఉన్నవి మొదట వస్తాయి)
-      const sortedByDue = [...records].sort((a, b) => {
-        const timeA = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
-        const timeB = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
-        return timeA - timeB;
-      });
+      const now = new Date().getTime();
 
-      sortedByDue.forEach(r => {
-        const row = document.createElement('tr');
-        row.className = 'hover:bg-slate-50 transition border-b border-slate-100';
-
+      dataToRender.forEach((r) => {
+        const isClosed = r.status === 'నివేదిక అందింది';
         const dueTime = new Date(r.dueDate).getTime();
-        const isOverdue = dueTime < now && r.status !== 'నివేదిక అందింది';
+        const isOverdue = dueTime < now && !isClosed;
+        
+        // గడువు ఇంకా 24 గంటలలో ముగుస్తుందా?
+        const isLapsingSoon = (!isClosed && !isOverdue && (dueTime - now) <= (24 * 60 * 60 * 1000));
 
-        const filePreviewBtn = r.fileInfo 
-          ? `<button onclick="viewFilePreviewByDocId('${r.docId}')" class="inline-flex items-center gap-1 bg-amber-500 hover:bg-amber-600 text-white font-bold px-3 py-1.5 rounded-xl shadow-sm text-[11px] transition">
-              <i data-lucide="file-text" class="w-3.5 h-3.5"></i> ఫైల్ చూడండి
+        const reminderText = (r.lastReminderAt && r.lastReminderAt !== r.sentAt) 
+          ? `<span class="inline-flex items-center gap-1 text-[11px] text-amber-700 font-bold mt-1 bg-amber-50 px-2 py-0.5 rounded-md border border-amber-200">
+               <i data-lucide="bell" class="w-3 h-3 text-amber-600"></i> రిమైండర్: ${formatReadableTime(r.lastReminderAt)}
+             </span>`
+          : '';
+
+        const fileBtn = r.fileInfo 
+          ? `<button onclick="viewFilePreview('${r.docId}')" class="inline-flex items-center gap-1.5 bg-cyan-50 hover:bg-cyan-100 text-cyan-800 font-bold px-3 py-1.5 rounded-xl border border-cyan-300 text-xs shadow-sm transition">
+               <i data-lucide="eye" class="w-4 h-4 text-cyan-600"></i> చూడండి
              </button>`
-          : `<span class="text-slate-400 font-medium">ఫైల్ లేదు</span>`;
+          : `<span class="text-slate-400 text-xs italic">ఫైల్ లేదు</span>`;
 
+        const row = document.createElement('tr');
+        row.className = `transition border-b border-slate-100 ${isOverdue ? 'bg-rose-50/40 hover:bg-rose-50/70' : isLapsingSoon ? 'bg-amber-50/40 hover:bg-amber-50/70' : 'hover:bg-slate-50'}`;
+        
         row.innerHTML = `
-          <td class="px-4 py-3 font-mono font-bold ${isOverdue ? 'text-rose-600' : 'text-slate-800'}">
-            ${r.dueDate ? r.dueDate.replace('T', ' ') : 'N/A'}
-            ${isOverdue ? '<span class="block text-[10px] text-rose-500 font-semibold">(గడువు ముగిసింది)</span>' : ''}
+          <td class="px-5 py-4">
+            <div class="font-black text-slate-900">${r.refNo}</div>
+            <div class="text-xs text-teal-700 font-bold tracking-wide">${r.appType}</div>
           </td>
-          <td class="px-4 py-3 font-extrabold text-slate-900">${r.refNo}</td>
-          <td class="px-4 py-3 text-slate-700 font-semibold">${r.applicantName}</td>
-          <td class="px-4 py-3 text-slate-600">${r.appType}</td>
-          <td class="px-4 py-3 font-semibold text-slate-800">${r.staffName}</td>
-          <td class="px-4 py-3">
-            <span class="px-2.5 py-1 rounded-full text-[10px] font-bold ${r.status === 'నివేదిక అందింది' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
+          <td class="px-5 py-4 text-slate-800 font-semibold">${r.applicantName}</td>
+          <td class="px-5 py-4">
+            <div class="font-bold text-slate-800">${r.staffName}</div>
+            <div class="text-xs text-slate-500 font-mono">+91 ${r.staffPhone}</div>
+          </td>
+          <td class="px-5 py-4 font-mono text-xs">
+            <div class="font-black ${isOverdue ? 'text-rose-600 font-extrabold' : isLapsingSoon ? 'text-amber-700 font-bold' : 'text-slate-700'}">
+              ${r.dueDate ? r.dueDate.replace('T', ' ') : 'N/A'}
+            </div>
+            ${isOverdue ? '<span class="inline-block mt-1 bg-rose-100 text-rose-700 text-[10px] font-black px-2 py-0.5 rounded-full">గడువు ముగిసింది!</span>' : ''}
+            ${isLapsingSoon ? '<span class="inline-block mt-1 bg-amber-100 text-amber-800 text-[10px] font-black px-2 py-0.5 rounded-full animate-pulse">గడువు త్వరలో ముగుస్తుంది</span>' : ''}
+          </td>
+          <td class="px-5 py-4 text-center">
+            ${fileBtn}
+          </td>
+          <td class="px-5 py-4 text-center">
+            <button onclick="toggleStatusByIndex('${r.docId}')" class="text-xs font-bold px-3 py-1.5 rounded-xl border shadow-sm transition ${isClosed ? 'bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-700' : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-300'}">
               ${r.status}
-            </span>
+            </button>
           </td>
-          <td class="px-4 py-3 text-center">${filePreviewBtn}</td>
+          <td class="px-5 py-4 text-right">
+            <div class="flex flex-col items-end gap-1.5">
+              <div class="inline-flex items-center gap-2">
+                ${!isClosed ? `
+                  <button onclick="triggerReminderByIndex('\${r.docId}')" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black px-3 py-1.5 rounded-xl shadow-sm transition active:scale-95 text-xs" title="వాట్సాప్ రిమైండర్ పంపు">
+                    <i data-lucide="bell-ring" class="w-4 h-4"></i>
+                    రిమైండర్
+                  </button>
+                ` : ''}
+                <button onclick="deleteRecordByIndex('${r.docId}')" class="text-slate-400 hover:text-rose-600 p-1.5 rounded-xl hover:bg-rose-50 transition" title="తొలగించు">
+                  <i data-lucide="trash-2" class="w-4 h-4"></i>
+                </button>
+              </div>
+              ${reminderText}
+            </div>
+          </td>
         `;
         tbody.appendChild(row);
       });
@@ -754,18 +712,18 @@
       lucide.createIcons();
     }
 
-    function viewFilePreviewByDocId(docId) {
+    function viewFilePreview(docId) {
       const item = records.find(r => r.docId === docId);
       if (!item || !item.fileInfo || !item.fileInfo.data) {
-        alert("ఈ అర్జీకి సంబంధించిన ఫైల్ అందుబాటులో లేదు.");
+        alert("ఈ అర్జీకి సంబంధించిన డాక్యుమెంట్ అందుబాటులో లేదు.");
         return;
       }
 
       const win = window.open();
-      if (item.fileInfo.type.includes('pdf')) {
+      if (item.fileInfo.type && item.fileInfo.type.includes('pdf')) {
         win.document.write(`<title>${item.fileInfo.name}</title><iframe src="${item.fileInfo.data}" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>`);
       } else {
-        win.document.write(`<title>${item.fileInfo.name}</title><body style="margin:0; background:#0f172a; display:flex; align-items:center; justify-content:center; height:100vh;"><img src="${item.fileInfo.data}" style="max-width:90%; max-height:90%; margin:auto; border-radius:12px; box-shadow:0 10px 25px rgba(0,0,0,0.5);" /></body>`);
+        win.document.write(`<title>${item.fileInfo.name}</title><body style="margin:0; background:#0f172a; display:flex; align-items:center; justify-content:center; height:100vh;"><img src="${item.fileInfo.data}" style="max-width:92%; max-height:92%; margin:auto; border-radius:14px; box-shadow:0 15px 35px rgba(0,0,0,0.6);" /></body>`);
       }
     }
 
@@ -784,7 +742,7 @@
       const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
       const link = document.createElement("a");
       link.href = URL.createObjectURL(blob);
-      link.setAttribute("download", `Peddavadugur_Tracker_${new Date().toISOString().slice(0,10)}.csv`);
+      link.setAttribute("download", `Peddavadugur_Revenue_Report_${new Date().toISOString().slice(0,10)}.csv`);
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);

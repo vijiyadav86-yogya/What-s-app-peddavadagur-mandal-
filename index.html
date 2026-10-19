@@ -28,7 +28,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-16">
 
-  <!-- Tahsildar Login Window (PIN: 1234) -->
+  <!-- Tahsildar Login Window -->
   <div id="tahsildarAuthOverlay" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-7 text-center border border-amber-300">
       <div class="w-16 h-16 bg-gradient-to-tr from-amber-500 to-amber-300 text-slate-950 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-amber-500/20">
@@ -54,7 +54,7 @@
     </div>
   </div>
 
-  <!-- Security Action PIN Modal (PIN: 1234 for Unlock Form | PIN: 8688 for Status & Delete) -->
+  <!-- Security Action PIN Modal (Status / Delete / Form Unlock) -->
   <div id="securityActionModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center border-2 border-rose-400">
       <div class="w-14 h-14 bg-rose-100 text-rose-700 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
@@ -72,6 +72,41 @@
         <div class="flex gap-2">
           <button type="button" onclick="closeSecurityActionModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2.5 rounded-xl transition">రద్దు</button>
           <button type="submit" class="w-1/2 bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs py-2.5 rounded-xl shadow-md transition">ధ్రువీకరించు</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Change Password Modal -->
+  <div id="changePasswordModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center border-2 border-cyan-400">
+      <div class="w-14 h-14 bg-cyan-100 text-cyan-800 rounded-2xl flex items-center justify-center mx-auto mb-3">
+        <i data-lucide="key-round" class="w-7 h-7"></i>
+      </div>
+      <h3 class="text-lg font-black text-slate-900 mb-1">పాస్‌వర్డ్ మార్పు</h3>
+      <p class="text-xs text-slate-500 mb-4">ఏ పిన్ మార్చాలనుకుంటున్నారో ఎంచుకోండి</p>
+
+      <form id="changePasswordForm" class="space-y-3.5 text-left">
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">పిన్ రకం</label>
+          <select id="pinTargetType" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold outline-none">
+            <option value="login">లాగిన్ & అన్‌లాక్ పిన్ (Default: 1234)</option>
+            <option value="action">స్టేటస్ & డిలీట్ యాక్షన్ పిన్ (Default: 8688)</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">ప్రస్తుత పిన్ (Old PIN)</label>
+          <input type="password" id="oldPinInput" required placeholder="••••" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold outline-none">
+        </div>
+        <div>
+          <label class="block text-[11px] font-bold text-slate-600 uppercase mb-1">కొత్త పిన్ (New PIN)</label>
+          <input type="password" id="newPinInput" required placeholder="••••" class="w-full bg-slate-50 border border-slate-300 rounded-xl px-3 py-2 text-xs font-bold outline-none">
+        </div>
+        <p id="changePinError" class="text-xs text-rose-600 font-bold hidden text-center">ప్రస్తుత పిన్ తప్పుగా నమోదైంది!</p>
+
+        <div class="flex gap-2 pt-2">
+          <button type="button" onclick="closeChangePasswordModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2.5 rounded-xl transition">రద్దు</button>
+          <button type="submit" class="w-1/2 bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-xs py-2.5 rounded-xl shadow-md transition">మార్చు</button>
         </div>
       </form>
     </div>
@@ -109,10 +144,10 @@
 
   <main class="max-w-7xl mx-auto px-4 py-8 space-y-8">
 
-    <!-- Order Issue Form (Password Protected / Lock State) -->
+    <!-- Order Issue Form (Password Protected) -->
     <div class="glass-card rounded-3xl shadow-lg border border-slate-200/90 overflow-hidden relative">
       
-      <!-- Lock Overlay for Unauthorized Edits (పిన్ నంబర్ కనిపించకుండా దాచబడింది) -->
+      <!-- Lock Overlay for Unauthorized Edits -->
       <div id="formLockOverlay" class="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] z-20 flex flex-col items-center justify-center p-4">
         <div class="bg-white/95 p-6 rounded-3xl shadow-2xl text-center max-w-sm border border-slate-200 space-y-3">
           <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center mx-auto">
@@ -262,9 +297,14 @@
               <p class="text-xs text-amber-950 font-bold">గడువు ముగుస్తున్న అర్జీల ప్రాధాన్యత ఆధారంగా (Ascending Order / Lapsing Soon First)</p>
             </div>
           </div>
-          <button onclick="hideTahsildarDashboard()" class="self-end md:self-auto text-xs font-bold bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
-            <i data-lucide="log-out" class="w-4 h-4"></i> లాగ్ అవుట్
-          </button>
+          <div class="flex items-center gap-2 self-end md:self-auto">
+            <button onclick="openChangePasswordModal()" class="text-xs font-bold bg-cyan-100 hover:bg-cyan-200 text-cyan-900 px-3.5 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+              <i data-lucide="key-round" class="w-3.5 h-3.5"></i> పాస్‌వర్డ్ మార్పు
+            </button>
+            <button onclick="hideTahsildarDashboard()" class="text-xs font-bold bg-slate-200 hover:bg-slate-300 text-slate-800 px-4 py-2 rounded-xl transition flex items-center gap-1.5 shadow-sm">
+              <i data-lucide="log-out" class="w-4 h-4"></i> లాగ్ అవుట్
+            </button>
+          </div>
         </div>
 
         <!-- Filter Cards -->
@@ -354,9 +394,17 @@
   </main>
 
   <script>
-    const TAHSILDAR_LOGIN_PIN = "1234";
-    const FORM_UNLOCK_PIN = "1234";      // ఫారమ్ లాక్ ఓపెన్ చేయడానికి PIN: 1234
-    const ACTION_SECURITY_PIN = "8688";  // స్టేటస్ మార్చడానికి, డిలీట్ చేయడానికి PIN: 8688
+    // టెలిగ్రామ్ అలర్ట్ సెట్టింగ్స్
+    // BotFather నుండి వచ్చిన టోకెన్ మరియు myidbot నుండి వచ్చిన చాట్ ID ఇక్కడ నమోదు చేయండి:
+    const TELEGRAM_BOT_TOKEN = "7123456789:AAFn_MEE_BOT_TOKEN_IKKADA_PETTANDI";
+    const TELEGRAM_CHAT_ID = "MEE_CHAT_ID_IKKADA_PETTANDI";
+
+    function getStoredPin(key, defaultVal) {
+      return localStorage.getItem(key) || defaultVal;
+    }
+
+    let TAHSILDAR_LOGIN_PIN = getStoredPin("tahsildar_login_pin", "1234");
+    let ACTION_SECURITY_PIN = getStoredPin("tahsildar_action_pin", "8688");
 
     let currentFilterMode = 'all';
     let pendingActionDocId = null;
@@ -386,12 +434,41 @@
       const errorMsg = document.getElementById('tahsildarAuthError');
       if (pin === TAHSILDAR_LOGIN_PIN) {
         closeTahsildarModal();
+        sendTelegramLoginAlert();
         showTahsildarDashboard();
       } else {
         errorMsg.classList.remove('hidden');
         document.getElementById('tahsildarPinInput').value = '';
       }
     });
+
+    // టెలిగ్రామ్ & ఫైర్‌బేస్ లాగిన్ అలర్ట్
+    async function sendTelegramLoginAlert() {
+      const now = new Date().toLocaleString('en-IN', { timeZone: 'Asia/Kolkata' });
+      const device = navigator.userAgent.includes('Mobile') ? '📱 మొబైల్ ఫోన్' : '💻 కంప్యూటర్ / ల్యాప్‌టాప్';
+      const message = `🚨 *తహసీల్దార్ డాష్‌బోర్డ్ సెక్యూరిటీ అలర్ట్*\n\n👤 *వివరణ:* తహసీల్దార్ డాష్‌బోర్డ్‌లో లాగిన్ అయ్యారు!\n📅 *సమయం:* ${now}\n🌐 *డివైస్:* ${device}\n📍 *కార్యాలయం:* పెద్దవడుగూరు మండలం`;
+
+      try {
+        if (TELEGRAM_BOT_TOKEN && !TELEGRAM_BOT_TOKEN.includes("MEE_BOT_TOKEN")) {
+          const url = `https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage?chat_id=${TELEGRAM_CHAT_ID}&text=${encodeURIComponent(message)}&parse_mode=Markdown`;
+          fetch(url, { mode: 'no-cors' }).catch(err => console.warn("Telegram alert skipped:", err));
+        }
+      } catch (e) {
+        console.warn("Telegram trigger error:", e);
+      }
+
+      try {
+        if (db) {
+          await db.collection("login_alerts").add({
+            loginTime: new Date().toISOString(),
+            status: "విజయవంతమైన లాగిన్",
+            userAgent: navigator.userAgent
+          });
+        }
+      } catch (err) {
+        console.warn("Login log skipped:", err);
+      }
+    }
 
     function showTahsildarDashboard() {
       document.getElementById('tahsildarDashboardSection').classList.remove('hidden');
@@ -404,7 +481,6 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Direct Action Modal Trigger (Status Update, Delete & Form Unlock)
     function promptSecurityAction(action, docId = null) {
       pendingActionType = action;
       pendingActionDocId = docId;
@@ -457,9 +533,8 @@
       const action = pendingActionType;
       const docId = pendingActionDocId;
 
-      // ఫారమ్ అన్‌లాక్‌కు PIN 1234, డిలీట్/స్టేటస్‌కు PIN 8688
       if (action === 'unlockForm') {
-        if (enteredPin === FORM_UNLOCK_PIN) {
+        if (enteredPin === TAHSILDAR_LOGIN_PIN) {
           closeSecurityActionModal();
           unlockDispatchForm();
         } else {
@@ -477,6 +552,51 @@
         } else {
           err.classList.remove('hidden');
           document.getElementById('securityPinInput').value = '';
+        }
+      }
+    });
+
+    function openChangePasswordModal() {
+      document.getElementById('changePasswordModal').classList.remove('hidden');
+      document.getElementById('oldPinInput').value = '';
+      document.getElementById('newPinInput').value = '';
+      document.getElementById('changePinError').classList.add('hidden');
+      lucide.createIcons();
+    }
+
+    function closeChangePasswordModal() {
+      document.getElementById('changePasswordModal').classList.add('hidden');
+    }
+
+    document.getElementById('changePasswordForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const type = document.getElementById('pinTargetType').value;
+      const oldPin = document.getElementById('oldPinInput').value.trim();
+      const newPin = document.getElementById('newPinInput').value.trim();
+      const err = document.getElementById('changePinError');
+
+      if (!newPin) {
+        alert('దయచేసి కొత్త పిన్ నమోదు చేయండి.');
+        return;
+      }
+
+      if (type === 'login') {
+        if (oldPin === TAHSILDAR_LOGIN_PIN) {
+          TAHSILDAR_LOGIN_PIN = newPin;
+          localStorage.setItem("tahsildar_login_pin", newPin);
+          alert('లాగిన్ & అన్‌లాక్ పిన్ విజయవంతంగా మార్చబడింది!');
+          closeChangePasswordModal();
+        } else {
+          err.classList.remove('hidden');
+        }
+      } else if (type === 'action') {
+        if (oldPin === ACTION_SECURITY_PIN) {
+          ACTION_SECURITY_PIN = newPin;
+          localStorage.setItem("tahsildar_action_pin", newPin);
+          alert('స్టేటస్ & డిలీట్ పిన్ విజయవంతంగా మార్చబడింది!');
+          closeChangePasswordModal();
+        } else {
+          err.classList.remove('hidden');
         }
       }
     });

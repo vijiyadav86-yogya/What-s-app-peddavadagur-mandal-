@@ -28,7 +28,7 @@
 </head>
 <body class="bg-slate-100 text-slate-800 min-h-screen pb-16">
 
-  <!-- తహసీల్దార్ లాగిన్ విండో -->
+  <!-- Tahsildar Login Window (PIN: 1234) -->
   <div id="tahsildarAuthOverlay" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-7 text-center border border-amber-300">
       <div class="w-16 h-16 bg-gradient-to-tr from-amber-500 to-amber-300 text-slate-950 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-amber-500/20">
@@ -54,9 +54,9 @@
     </div>
   </div>
 
-  <!-- డెలిట్ & స్టేటస్ చేంజ్ సెక్యూరిటీ పిన్ విండో -->
+  <!-- Action Security PIN Modal (PIN: 8688) -->
   <div id="securityActionModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center border-2 border-rose-300">
+    <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center border-2 border-rose-400">
       <div class="w-14 h-14 bg-rose-100 text-rose-700 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
         <i data-lucide="lock-keyhole" class="w-7 h-7"></i>
       </div>
@@ -67,7 +67,7 @@
         <div>
           <input type="password" id="securityPinInput" placeholder="••••" maxlength="10" required
             class="w-full bg-slate-50 border border-slate-300 rounded-2xl px-4 py-3 text-center text-xl tracking-widest font-black outline-none focus:ring-2 focus:ring-rose-500 focus:bg-white transition">
-          <p id="securityPinError" class="text-xs text-rose-600 font-bold mt-2 hidden text-center">తప్పుడు పిన్! అనుమతి నిరాకరించబడింది.</p>
+          <p id="securityPinError" class="text-xs text-rose-600 font-bold mt-2 hidden text-center">తప్పుడు పిన్! సరైన పిన్ నమోదు చేయండి.</p>
         </div>
         <div class="flex gap-2">
           <button type="button" onclick="closeSecurityActionModal()" class="w-1/2 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-bold py-2.5 rounded-xl transition">రద్దు</button>
@@ -77,7 +77,7 @@
     </div>
   </div>
 
-  <!-- ప్రధాన హెడర్ -->
+  <!-- Main Header -->
   <header class="bg-gradient-to-r from-teal-900 via-emerald-800 to-cyan-900 text-white shadow-xl sticky top-0 z-40 border-b border-emerald-500/20">
     <div class="max-w-7xl mx-auto px-4 py-3.5 flex flex-col md:flex-row items-center justify-between gap-3">
       <div class="flex items-center space-x-3.5">
@@ -94,7 +94,7 @@
       </div>
 
       <div class="flex flex-wrap items-center gap-2.5">
-        <button onclick="openTahsildarModal()" class="inline-flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black text-xs px-4 py-2.5 rounded-2xl shadow-md border border-amber-300 transition active:scale-95">
+        <button onclick="openTahsildarModal()" class="inline-flex items-center gap-2 bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-500 hover:to-amber-600 text-slate-950 font-black text-xs px-4 py-2.5 rounded-2xl shadow-md border border-amber-300 transition active:scale-95 cursor-pointer">
           <i data-lucide="shield" class="w-4 h-4 text-slate-950"></i>
           తహసీల్దార్ డాష్‌బోర్డ్
         </button>
@@ -109,7 +109,7 @@
 
   <main class="max-w-7xl mx-auto px-4 py-8 space-y-8">
 
-    <!-- ఆదేశాలు జారీ చేసే ఫారమ్ -->
+    <!-- Order Issue Form -->
     <div class="glass-card rounded-3xl shadow-lg border border-slate-200/90 overflow-hidden">
       <div class="border-b border-slate-100 bg-slate-50/90 px-6 py-4 flex items-center justify-between">
         <div class="flex items-center space-x-2.5">
@@ -226,7 +226,7 @@
       </form>
     </div>
 
-    <!-- తహసీల్దార్ ప్రత్యేక పర్యవేక్షణ విభాగం -->
+    <!-- Tahsildar Exclusive Dashboard Section -->
     <section id="tahsildarDashboardSection" class="hidden space-y-8">
       
       <div class="bg-gradient-to-br from-amber-500/10 via-amber-50 to-white rounded-3xl shadow-xl border-2 border-amber-300 p-6 md:p-8 space-y-6">
@@ -245,7 +245,7 @@
           </button>
         </div>
 
-        <!-- కౌంటర్స్ (క్లిక్ ద్వారా ఫిల్టర్ అవుతాయి) -->
+        <!-- Filter Cards -->
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
           <div onclick="setFilterMode('all')" id="cardTotal" class="bg-white p-4 rounded-2xl border-2 border-slate-200 shadow-sm flex items-center justify-between cursor-pointer hover:border-blue-400 hover:shadow-md transition">
             <div>
@@ -278,7 +278,7 @@
         </div>
       </div>
 
-      <!-- ప్రత్యక్ష పర్యవేక్షణ నివేదిక టేబుల్ -->
+      <!-- Live Monitoring Table -->
       <div class="glass-card rounded-3xl shadow-xl border border-slate-200 overflow-hidden">
         <div class="px-6 py-5 border-b border-slate-100 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-slate-50/90">
           <div class="flex items-center gap-3">
@@ -322,7 +322,7 @@
               </tr>
             </thead>
             <tbody id="dispatchTableBody" class="divide-y divide-slate-100 font-medium">
-              <!-- డైనమిక్‌గా లోడ్ అవుతుంది -->
+              <!-- Dynamically populated -->
             </tbody>
           </table>
         </div>
@@ -333,21 +333,12 @@
   </main>
 
   <script>
-    // SHA-256 Hashes:
-    // "1234" -> 03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4
-    // "8688" -> 1679051877e8139e8020d912440b8a36238b7250684f8dbec7a48dbe55913fbe
-    const HASH_DASHBOARD_PIN = "03ac674216f3e15c761ee1a5e255f067953623c8b388b4459e13f978d7c846f4";
-    const HASH_ACTION_PIN = "1679051877e8139e8020d912440b8a36238b7250684f8dbec7a48dbe55913fbe";
+    const TAHSILDAR_LOGIN_PIN = "1234";
+    const ACTION_SECURITY_PIN = "8688";
 
-    let currentFilterMode = 'all'; // 'all', 'pending', 'overdue', 'closed'
-    let pendingSecurityAction = null; // { action: 'delete'|'toggleStatus', index: number }
-
-    async function sha256(message) {
-      const msgBuffer = new TextEncoder().encode(message);
-      const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
-      const hashArray = Array.from(new Uint8Array(hashBuffer));
-      return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
-    }
+    let currentFilterMode = 'all';
+    let pendingActionDocId = null;
+    let pendingActionType = null;
 
     document.addEventListener('DOMContentLoaded', () => {
       lucide.createIcons();
@@ -367,12 +358,11 @@
       document.getElementById('tahsildarAuthOverlay').classList.add('hidden');
     }
 
-    document.getElementById('tahsildarAuthForm').addEventListener('submit', async (e) => {
+    document.getElementById('tahsildarAuthForm').addEventListener('submit', (e) => {
       e.preventDefault();
       const pin = document.getElementById('tahsildarPinInput').value.trim();
-      const hashed = await sha256(pin);
       const errorMsg = document.getElementById('tahsildarAuthError');
-      if (hashed === HASH_DASHBOARD_PIN) {
+      if (pin === TAHSILDAR_LOGIN_PIN) {
         closeTahsildarModal();
         showTahsildarDashboard();
       } else {
@@ -392,9 +382,11 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // సెక్యూరిటీ పిన్ (8688) మోడల్ హ్యాండ్లింగ్
-    function promptSecurityAction(action, idx) {
-      pendingSecurityAction = { action, idx };
+    // Direct Action Modal Trigger (Status Update & Delete)
+    function promptSecurityAction(action, docId) {
+      pendingActionType = action;
+      pendingActionDocId = docId;
+
       const title = document.getElementById('securityActionTitle');
       const desc = document.getElementById('securityActionDesc');
       const err = document.getElementById('securityPinError');
@@ -417,25 +409,24 @@
 
     function closeSecurityActionModal() {
       document.getElementById('securityActionModal').classList.add('hidden');
-      pendingSecurityAction = null;
+      pendingActionDocId = null;
+      pendingActionType = null;
     }
 
     document.getElementById('securityActionForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const enteredPin = document.getElementById('securityPinInput').value.trim();
-      const hashed = await sha256(enteredPin);
       const err = document.getElementById('securityPinError');
 
-      if (hashed === HASH_ACTION_PIN) {
-        const actionData = pendingSecurityAction;
+      if (enteredPin === ACTION_SECURITY_PIN) {
+        const action = pendingActionType;
+        const docId = pendingActionDocId;
         closeSecurityActionModal();
 
-        if (actionData) {
-          if (actionData.action === 'delete') {
-            await executeDeleteRecord(actionData.idx);
-          } else if (actionData.action === 'toggleStatus') {
-            await executeToggleStatus(actionData.idx);
-          }
+        if (action === 'delete') {
+          await executeDeleteRecord(docId);
+        } else if (action === 'toggleStatus') {
+          await executeToggleStatus(docId);
         }
       } else {
         err.classList.remove('hidden');
@@ -443,7 +434,6 @@
       }
     });
 
-    // Firebase Credentials
     const firebaseConfig = {
       apiKey: "AIzaSyAPaIA-OPJnKH1X2XZKXG3DF4U-J6UY60Y",
       authDomain: "mropvg-d2e6d.firebaseapp.com",
@@ -603,17 +593,16 @@
       }
     });
 
-    // రిమైండర్ ట్రిగ్గర్
-    async function triggerReminderByIndex(idx) {
-      const item = records[idx];
-      if (!item || !item.docId) {
+    async function triggerReminderByDocId(docId) {
+      const item = records.find(r => r.docId === docId);
+      if (!item) {
         alert("రికార్డు గుర్తించబడలేదు.");
         return;
       }
 
       const now = new Date().toISOString();
       try {
-        await db.collection("notices").doc(item.docId).update({
+        await db.collection("notices").doc(docId).update({
           lastReminderAt: now
         });
         dispatchToWhatsApp(item.staffPhone, generateMessageText(item, true));
@@ -622,26 +611,21 @@
       }
     }
 
-    // సెక్యూర్డ్ స్టేటస్ అప్‌డేట్
-    async function executeToggleStatus(idx) {
-      const item = records[idx];
-      if (!item || !item.docId) return;
+    async function executeToggleStatus(docId) {
+      const item = records.find(r => r.docId === docId);
+      if (!item) return;
 
       const nextStatus = item.status === 'పెండింగ్' ? 'నివేదిక అందింది' : 'పెండింగ్';
       try {
-        await db.collection("notices").doc(item.docId).update({ status: nextStatus });
+        await db.collection("notices").doc(docId).update({ status: nextStatus });
       } catch (err) {
         alert("స్టేటస్ అప్‌డేట్ విఫలమైంది: " + err.message);
       }
     }
 
-    // సెక్యూర్డ్ రికార్డు డిలీట్
-    async function executeDeleteRecord(idx) {
-      const item = records[idx];
-      if (!item || !item.docId) return;
-
+    async function executeDeleteRecord(docId) {
       try {
-        await db.collection("notices").doc(item.docId).delete();
+        await db.collection("notices").doc(docId).delete();
       } catch (err) {
         alert("రికార్డు తొలగింపు విఫలమైంది: " + err.message);
       }
@@ -654,7 +638,6 @@
           loaded.push({ docId: doc.id, ...doc.data() });
         });
 
-        // గడువు తేదీ సమీపించే క్రమం (Ascending Order - Lapsing Soon First)
         loaded.sort((a, b) => {
           const timeA = a.dueDate ? new Date(a.dueDate).getTime() : Infinity;
           const timeB = b.dueDate ? new Date(b.dueDate).getTime() : Infinity;
@@ -671,7 +654,6 @@
       });
     }
 
-    // కౌంటర్ కార్డ్ క్లిక్ ద్వారా ఫిల్టర్ ఎంపిక
     function setFilterMode(mode) {
       currentFilterMode = mode;
       
@@ -763,8 +745,6 @@
       const now = new Date().getTime();
 
       dataToRender.forEach((r) => {
-        const originalIndex = records.findIndex(rec => rec.docId === r.docId);
-
         const isClosed = r.status === 'నివేదిక అందింది';
         const dueTime = new Date(r.dueDate).getTime();
         const isOverdue = dueTime < now && !isClosed;
@@ -777,7 +757,7 @@
           : '';
 
         const fileBtn = r.fileInfo 
-          ? `<button onclick="viewFilePreview(${originalIndex})" class="inline-flex items-center gap-1.5 bg-cyan-50 hover:bg-cyan-100 text-cyan-800 font-bold px-3 py-1.5 rounded-xl border border-cyan-300 text-xs shadow-sm transition">
+          ? `<button onclick="viewFilePreview('${r.docId}')" class="inline-flex items-center gap-1.5 bg-cyan-50 hover:bg-cyan-100 text-cyan-800 font-bold px-3 py-1.5 rounded-xl border border-cyan-300 text-xs shadow-sm transition cursor-pointer">
                <i data-lucide="eye" class="w-4 h-4 text-cyan-600"></i> చూడండి
              </button>`
           : `<span class="text-slate-400 text-xs italic">ఫైల్ లేదు</span>`;
@@ -806,7 +786,7 @@
             ${fileBtn}
           </td>
           <td class="px-5 py-4 text-center">
-            <button onclick="promptSecurityAction('toggleStatus', ${originalIndex})" title="స్టేటస్ మార్చుటకు పిన్ అవసరం" class="text-xs font-bold px-3 py-1.5 rounded-xl border shadow-sm transition flex items-center justify-center gap-1 mx-auto ${isClosed ? 'bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-700' : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-300'}">
+            <button onclick="promptSecurityAction('toggleStatus', '${r.docId}')" title="స్టేటస్ మార్చుటకు పిన్ అవసరం" class="text-xs font-bold px-3 py-1.5 rounded-xl border shadow-sm transition flex items-center justify-center gap-1 mx-auto cursor-pointer ${isClosed ? 'bg-emerald-600 text-white border-emerald-600 hover:bg-emerald-700' : 'bg-white hover:bg-slate-100 text-slate-700 border-slate-300'}">
               <i data-lucide="lock" class="w-3 h-3 opacity-60"></i>
               ${r.status}
             </button>
@@ -815,12 +795,12 @@
             <div class="flex flex-col items-end gap-1.5">
               <div class="inline-flex items-center gap-2">
                 ${!isClosed ? `
-                  <button onclick="triggerReminderByIndex(\${originalIndex})" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black px-3 py-1.5 rounded-xl shadow-sm transition active:scale-95 text-xs cursor-pointer" title="వాట్సాప్ రిమైండర్ పంపు">
+                  <button onclick="triggerReminderByDocId('\${r.docId}')" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-black px-3 py-1.5 rounded-xl shadow-sm transition active:scale-95 text-xs cursor-pointer" title="వాట్సాప్ రిమైండర్ పంపు">
                     <i data-lucide="bell-ring" class="w-4 h-4"></i>
                     రిమైండర్
                   </button>
                 ` : ''}
-                <button onclick="promptSecurityAction('delete', ${originalIndex})" class="text-slate-400 hover:text-rose-600 p-1.5 rounded-xl hover:bg-rose-50 transition cursor-pointer" title="తొలగించుటకు పిన్ అవసరం">
+                <button onclick="promptSecurityAction('delete', '${r.docId}')" class="text-slate-400 hover:text-rose-600 p-1.5 rounded-xl hover:bg-rose-50 transition cursor-pointer" title="తొలగించుటకు పిన్ అవసరం">
                   <i data-lucide="trash-2" class="w-4 h-4"></i>
                 </button>
               </div>
@@ -834,8 +814,8 @@
       lucide.createIcons();
     }
 
-    function viewFilePreview(idx) {
-      const item = records[idx];
+    function viewFilePreview(docId) {
+      const item = records.find(r => r.docId === docId);
       if (!item || !item.fileInfo || !item.fileInfo.data) {
         alert("ఈ అర్జీకి సంబంధించిన డాక్యుమెంట్ అందుబాటులో లేదు.");
         return;

@@ -1,1 +1,0 @@
-# What-s-app-peddavadagur-mandal-

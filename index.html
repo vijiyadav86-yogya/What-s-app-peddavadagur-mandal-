@@ -54,7 +54,7 @@
     </div>
   </div>
 
-  <!-- Action Security PIN Modal (PIN: 8688) -->
+  <!-- Security Action PIN Modal (PIN: 8688 for Form Unlock / Status / Delete) -->
   <div id="securityActionModal" class="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-md hidden flex items-center justify-center p-4">
     <div class="bg-white rounded-3xl shadow-2xl max-w-sm w-full p-6 text-center border-2 border-rose-400">
       <div class="w-14 h-14 bg-rose-100 text-rose-700 rounded-2xl flex items-center justify-center mx-auto mb-3 shadow-inner">
@@ -109,8 +109,23 @@
 
   <main class="max-w-7xl mx-auto px-4 py-8 space-y-8">
 
-    <!-- Order Issue Form -->
-    <div class="glass-card rounded-3xl shadow-lg border border-slate-200/90 overflow-hidden">
+    <!-- Order Issue Form (Password Protected / Lock State) -->
+    <div class="glass-card rounded-3xl shadow-lg border border-slate-200/90 overflow-hidden relative">
+      
+      <!-- Lock Overlay for Unauthorized Edits -->
+      <div id="formLockOverlay" class="absolute inset-0 bg-slate-900/40 backdrop-blur-[2px] z-20 flex flex-col items-center justify-center p-4">
+        <div class="bg-white/95 p-6 rounded-3xl shadow-2xl text-center max-w-sm border border-slate-200 space-y-3">
+          <div class="w-12 h-12 bg-amber-100 text-amber-700 rounded-2xl flex items-center justify-center mx-auto">
+            <i data-lucide="shield-alert" class="w-6 h-6"></i>
+          </div>
+          <h3 class="text-base font-extrabold text-slate-900">ఫారమ్ లాక్ చేయబడింది</h3>
+          <p class="text-xs text-slate-500 font-medium">ఎవరూ సమాచారాన్ని మార్చకుండా ఈ విభాగం లాక్ చేయబడింది. కొత్త ఆదేశం నమోదుకు పిన్ నమోదు చేయండి.</p>
+          <button onclick="promptSecurityAction('unlockForm')" class="inline-flex items-center gap-2 bg-gradient-to-r from-teal-600 to-emerald-700 hover:from-teal-700 hover:to-emerald-800 text-white font-bold text-xs px-6 py-2.5 rounded-xl shadow-md transition active:scale-95 cursor-pointer">
+            <i data-lucide="unlock" class="w-4 h-4"></i> లాక్ తెరవండి (PIN: 8688)
+          </button>
+        </div>
+      </div>
+
       <div class="border-b border-slate-100 bg-slate-50/90 px-6 py-4 flex items-center justify-between">
         <div class="flex items-center space-x-2.5">
           <div class="p-2 bg-teal-100 text-teal-800 rounded-xl">
@@ -121,108 +136,115 @@
             <p class="text-xs text-slate-500">అర్జీని నమోదు చేసి సిబ్బందికి తక్షణమే వాట్సాప్ ఆదేశం పంపండి</p>
           </div>
         </div>
-        <span class="text-xs font-semibold text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-200 flex items-center gap-1.5">
-          <i data-lucide="check-check" class="w-3.5 h-3.5"></i> ఆన్‌లైన్ ద్వారా నోటీస్ సదుపాయం
-        </span>
+        <div class="flex items-center gap-2">
+          <button id="lockFormBtn" onclick="lockDispatchForm()" class="hidden text-xs font-bold text-slate-700 bg-slate-200 hover:bg-slate-300 px-3 py-1.5 rounded-xl transition flex items-center gap-1">
+            <i data-lucide="lock" class="w-3.5 h-3.5"></i> తిరిగి లాక్ చేయి
+          </button>
+          <span class="text-xs font-semibold text-teal-700 bg-teal-50 px-3 py-1 rounded-full border border-teal-200 flex items-center gap-1.5">
+            <i data-lucide="check-check" class="w-3.5 h-3.5"></i> ఆన్‌లైన్ ద్వారా నోటీస్ సదుపాయం
+          </span>
+        </div>
       </div>
 
       <form id="dispatchForm" class="p-6 md:p-8 space-y-6">
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">అర్జీ రకం (Revenue Category)</label>
-            <div class="relative">
-              <select id="appType" required class="w-full bg-slate-50 border border-slate-300 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition appearance-none font-medium shadow-sm">
-                <option value="ROR">ROR</option>
-                <option value="PGRS (PGRS / మీసేవ)">PGRS అర్జీ</option>
-                <option value="మండలo అప్లికేషన్">మండలo అప్లికేషన్</option>
-                <option value="APSEVA కొరకు">APSEVA కొరకు</option>
-                <option value="భూ సరిహద్దుల వివాదం (F-Line)">భూ సరిహద్దుల వివాదం (F-Line)</option>
-                <option value="Resurvey (Joint LPM)">Resurvey (Joint LPM)</option>
-                <option value="ఎన్నికలు (Elections)">ఎన్నికలు (Elections)</option>
-                <option value="పౌర సరఫరాలు (Civil Supplies)">పౌర సరఫరాలు (Civil Supplies)</option>
-                <option value="ఇతరములు">ఇతరములు</option>
-              </select>
-              <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3.5 top-4 pointer-events-none"></i>
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">అర్జిదారుని పేరు (Applicant Name)</label>
-            <div class="relative">
-              <input type="text" id="applicantName" placeholder="ఉదా: రామాంజనేయులు" required class="w-full bg-slate-50 border border-slate-300 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition font-medium shadow-sm">
-              <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5"></i>
-            </div>
-          </div>
-
-          <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">రిఫరెన్స్ / అర్జీ నంబర్</label>
-            <div class="relative">
-              <input type="text" id="refNo" placeholder="F-8/2026/నోటీస్-12" required class="w-full bg-slate-50 border border-slate-300 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition font-medium shadow-sm">
-              <i data-lucide="hash" class="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5"></i>
-            </div>
-          </div>
-
-          <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <div class="flex items-center justify-between mb-2">
-                <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">సిబ్బంది పేరు (Staff / VRO)</label>
-                <button type="button" onclick="pickPhoneContact()" class="text-xs text-teal-700 hover:text-teal-900 flex items-center gap-1 font-bold">
-                  <i data-lucide="contact-2" class="w-3.5 h-3.5"></i> కాంటాక్ట్ ఎంచుకో
-                </button>
-              </div>
-              <input type="text" id="staffName" placeholder="సిబ్బంది పేరు నమోదు చేయండి" required class="w-full bg-slate-50 border border-slate-300 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition font-medium shadow-sm">
-            </div>
+        <fieldset id="formFieldSet" disabled class="space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
 
             <div>
-              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">WhatsApp ఫోన్ నంబర్</label>
-              <div class="relative flex shadow-sm rounded-2xl overflow-hidden">
-                <span class="inline-flex items-center px-4 border border-r-0 border-slate-300 bg-slate-100 text-slate-700 text-sm font-bold">
-                  🇮🇳 +91
-                </span>
-                <input type="tel" id="staffPhone" pattern="[0-9]{10}" maxlength="10" placeholder="9876543210" required class="w-full bg-slate-50 border border-slate-300 rounded-r-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition font-medium">
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">అర్జీ రకం (Revenue Category)</label>
+              <div class="relative">
+                <select id="appType" required class="w-full bg-slate-50 border border-slate-300 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition appearance-none font-medium shadow-sm">
+                  <option value="ROR">ROR</option>
+                  <option value="PGRS (PGRS / మీసేవ)">PGRS అర్జీ</option>
+                  <option value="మండలo అప్లికేషన్">మండలo అప్లికేషన్</option>
+                  <option value="APSEVA కొరకు">APSEVA కొరకు</option>
+                  <option value="భూ సరిహద్దుల వివాదం (F-Line)">భూ సరిహద్దుల వివాదం (F-Line)</option>
+                  <option value="Resurvey (Joint LPM)">Resurvey (Joint LPM)</option>
+                  <option value="ఎన్నికలు (Elections)">ఎన్నికలు (Elections)</option>
+                  <option value="పౌర సరఫరాలు (Civil Supplies)">పౌర సరఫరాలు (Civil Supplies)</option>
+                  <option value="ఇతరములు">ఇతరములు</option>
+                </select>
+                <i data-lucide="chevron-down" class="w-4 h-4 text-slate-400 absolute right-3.5 top-4 pointer-events-none"></i>
               </div>
             </div>
-          </div>
 
-          <div>
-            <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">అర్జీ కాపీ (PDF / JPG)</label>
-            <div class="relative">
-              <input type="file" id="fileUpload" accept="application/pdf,image/jpeg,image/png" class="w-full text-xs text-slate-500 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-teal-50 file:text-teal-800 hover:file:bg-teal-100 border border-slate-300 rounded-2xl p-1.5 bg-slate-50 shadow-sm cursor-pointer">
-            </div>
-          </div>
-
-          <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-4 bg-gradient-to-r from-teal-50/80 via-emerald-50/80 to-teal-50/80 p-5 rounded-2xl border border-teal-200">
             <div>
-              <label class="block text-xs font-bold text-teal-950 uppercase tracking-wider mb-2">గడువు రోజులు (ఎంపిక)</label>
-              <select id="presetDays" onchange="applyPresetDays(this.value)" class="w-full bg-white border border-teal-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-teal-600 outline-none font-semibold">
-                <option value="1">1 రోజు (తక్షణ ప్రాధాన్యత)</option>
-                <option value="2">2 రోజులు</option>
-                <option value="3" selected>3 రోజులు</option>
-                <option value="5">5 రోజులు</option>
-                <option value="7">7 రోజులు</option>
-                <option value="10">10 రోజులు</option>
-              </select>
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">అర్జిదారుని పేరు (Applicant Name)</label>
+              <div class="relative">
+                <input type="text" id="applicantName" placeholder="ఉదా: రామాంజనేయులు" required class="w-full bg-slate-50 border border-slate-300 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition font-medium shadow-sm">
+                <i data-lucide="user" class="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5"></i>
+              </div>
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-teal-950 uppercase tracking-wider mb-2">మ్యానువల్ రోజులు నమోదు</label>
-              <input type="number" id="manualDays" min="1" placeholder="రోజుల సంఖ్య" oninput="calculateCustomDate(this.value)" class="w-full bg-white border border-teal-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-teal-600 outline-none font-semibold">
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">రిఫరెన్స్ / అర్జీ నంబర్ సమస్య </label>
+              <div class="relative">
+                <input type="text" id="refNo" placeholder="F-8/2026/నోటీస్-12" required class="w-full bg-slate-50 border border-slate-300 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition font-medium shadow-sm">
+                <i data-lucide="hash" class="w-4 h-4 text-slate-400 absolute right-3.5 top-3.5"></i>
+              </div>
+            </div>
+
+            <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <label class="text-xs font-bold text-slate-700 uppercase tracking-wider">సిబ్బంది పేరు (Staff / VRO)</label>
+                  <button type="button" onclick="pickPhoneContact()" class="text-xs text-teal-700 hover:text-teal-900 flex items-center gap-1 font-bold">
+                    <i data-lucide="contact-2" class="w-3.5 h-3.5"></i> కాంటాక్ట్ ఎంచుకో
+                  </button>
+                </div>
+                <input type="text" id="staffName" placeholder="సిబ్బంది పేరు నమోదు చేయండి" required class="w-full bg-slate-50 border border-slate-300 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition font-medium shadow-sm">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">WhatsApp ఫోన్ నంబర్</label>
+                <div class="relative flex shadow-sm rounded-2xl overflow-hidden">
+                  <span class="inline-flex items-center px-4 border border-r-0 border-slate-300 bg-slate-100 text-slate-700 text-sm font-bold">
+                    🇮🇳 +91
+                  </span>
+                  <input type="tel" id="staffPhone" pattern="[0-9]{10}" maxlength="10" placeholder="9876543210" required class="w-full bg-slate-50 border border-slate-300 rounded-r-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-teal-500 focus:bg-white outline-none transition font-medium">
+                </div>
+              </div>
             </div>
 
             <div>
-              <label class="block text-xs font-bold text-teal-950 uppercase tracking-wider mb-2">పరిష్కార గడువు తేదీ & సమయం</label>
-              <input type="datetime-local" id="dueDate" required class="w-full bg-white border border-teal-300 rounded-xl px-4 py-2.5 text-sm text-teal-950 font-black outline-none">
+              <label class="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">అర్జీ కాపీ (PDF / JPG)</label>
+              <div class="relative">
+                <input type="file" id="fileUpload" accept="application/pdf,image/jpeg,image/png" class="w-full text-xs text-slate-500 file:mr-3 file:py-2.5 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-teal-50 file:text-teal-800 hover:file:bg-teal-100 border border-slate-300 rounded-2xl p-1.5 bg-slate-50 shadow-sm cursor-pointer">
+              </div>
             </div>
+
+            <div class="lg:col-span-3 grid grid-cols-1 md:grid-cols-3 gap-4 bg-gradient-to-r from-teal-50/80 via-emerald-50/80 to-teal-50/80 p-5 rounded-2xl border border-teal-200">
+              <div>
+                <label class="block text-xs font-bold text-teal-950 uppercase tracking-wider mb-2">గడువు రోజులు (ఎంపిక)</label>
+                <select id="presetDays" onchange="applyPresetDays(this.value)" class="w-full bg-white border border-teal-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-teal-600 outline-none font-semibold">
+                  <option value="1">1 రోజు (తక్షణ ప్రాధాన్యత)</option>
+                  <option value="2">2 రోజులు</option>
+                  <option value="3" selected>3 రోజులు</option>
+                  <option value="5">5 రోజులు</option>
+                  <option value="7">7 రోజులు</option>
+                  <option value="10">10 రోజులు</option>
+                </select>
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-teal-950 uppercase tracking-wider mb-2">మ్యానువల్ రోజులు నమోదు</label>
+                <input type="number" id="manualDays" min="1" placeholder="రోజుల సంఖ్య" oninput="calculateCustomDate(this.value)" class="w-full bg-white border border-teal-300 rounded-xl px-4 py-2.5 text-sm focus:ring-2 focus:ring-teal-600 outline-none font-semibold">
+              </div>
+
+              <div>
+                <label class="block text-xs font-bold text-teal-950 uppercase tracking-wider mb-2">పరిష్కార గడువు తేదీ & సమయం</label>
+                <input type="datetime-local" id="dueDate" required class="w-full bg-white border border-teal-300 rounded-xl px-4 py-2.5 text-sm text-teal-950 font-black outline-none">
+              </div>
+            </div>
+
           </div>
 
-        </div>
-
-        <div class="flex justify-end pt-4 border-t border-slate-100">
-          <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white text-sm font-bold px-8 py-3.5 rounded-2xl shadow-lg shadow-emerald-700/20 active:scale-95 transition">
-            <i data-lucide="send" class="w-4 h-4"></i> WhatsApp లో ఆదేశాలు పంపు & క్లౌడ్‌లో సేవ్ చేయి
-          </button>
-        </div>
+          <div class="flex justify-end pt-4 border-t border-slate-100">
+            <button type="submit" class="w-full sm:w-auto inline-flex items-center justify-center gap-2 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-700 hover:to-teal-800 text-white text-sm font-bold px-8 py-3.5 rounded-2xl shadow-lg shadow-emerald-700/20 active:scale-95 transition">
+              <i data-lucide="send" class="w-4 h-4"></i> WhatsApp లో ఆదేశాలు పంపు & క్లౌడ్‌లో సేవ్ చేయి
+            </button>
+          </div>
+        </fieldset>
       </form>
     </div>
 
@@ -381,8 +403,8 @@
       window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
-    // Direct Action Modal Trigger (Status Update & Delete)
-    function promptSecurityAction(action, docId) {
+    // Direct Action Modal Trigger (Status Update, Delete & Form Unlock)
+    function promptSecurityAction(action, docId = null) {
       pendingActionType = action;
       pendingActionDocId = docId;
 
@@ -396,6 +418,9 @@
       if (action === 'delete') {
         title.innerText = 'అర్జీని తొలగించుట';
         desc.innerText = 'అర్జీని శాశ్వతంగా తొలగించడానికి పిన్ నమోదు చేయండి';
+      } else if (action === 'unlockForm') {
+        title.innerText = 'ఫారమ్ అన్‌లాక్ చేయుట';
+        desc.innerText = 'కొత్త అర్జీ నమోదు/సవరణ కోసం అడ్మిన్ పిన్ నమోదు చేయండి';
       } else {
         title.innerText = 'నివేదిక స్థితి మార్పు';
         desc.innerText = 'అర్జీ స్టేటస్ అప్‌డేట్ చేయడానికి పిన్ నమోదు చేయండి';
@@ -412,6 +437,19 @@
       pendingActionType = null;
     }
 
+    // Form Lock / Unlock Handlers
+    function unlockDispatchForm() {
+      document.getElementById('formFieldSet').removeAttribute('disabled');
+      document.getElementById('formLockOverlay').classList.add('hidden');
+      document.getElementById('lockFormBtn').classList.remove('hidden');
+    }
+
+    function lockDispatchForm() {
+      document.getElementById('formFieldSet').setAttribute('disabled', 'true');
+      document.getElementById('formLockOverlay').classList.remove('hidden');
+      document.getElementById('lockFormBtn').classList.add('hidden');
+    }
+
     document.getElementById('securityActionForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       const enteredPin = document.getElementById('securityPinInput').value.trim();
@@ -426,6 +464,8 @@
           await executeDeleteRecord(docId);
         } else if (action === 'toggleStatus') {
           await executeToggleStatus(docId);
+        } else if (action === 'unlockForm') {
+          unlockDispatchForm();
         }
       } else {
         err.classList.remove('hidden');
@@ -518,7 +558,7 @@
         : `*తహసీల్దార్ వారి కార్యాలయం, పెద్దవడుగూరు*`;
 
       const reminderNote = isReminder
-        ? `⚠️ *గమనిక:* ఇది మీకు పంపబడుతున్న *${count}వ రిమైండర్*. గడువు ముగిసినా కూడా మీరు నివేదికను సమర్పించలేదు. తక్షణమే క్షేత్రస్థాయి విచారణ పూర్తి చేసి నివేదిక సమర్పించవలసిందిగా ఆదేశించడమైనది. లేనియెడల ఉన్నతాధికారులకు క్రమశిక్షణా నివేదిక పంపబడును.`
+        ? `⚠️ *గమనిక:* ఇది మీకు పంపబడుతున్న *${count}వ రిమైండర్*. గడువు ముగిసినా కూడా మీరు నివేదికను సమర్పించలేదు. తక్షణమే క్షేత్రస్థాయి విచారణ పూర్తి చేసి నివేదిక సమర్పించవలసిందిగా ఆదేశించడమైనది. లేనియెడల ఉన్నతాధికారులకు నివేదిక పంపబడును.`
         : `⚠️ *గమనిక:* నిర్ణీత గడువులోగా క్షేత్రస్థాయి విచారణ పూర్తి చేసి నివేదిక సమర్పించవలసిందిగా ఆదేశించడమైనది.`;
 
       return `${header}\n━━━━━━━━━━━━━━━━━━━━\n📌 *విచారణ నివేదిక కొరకు*\n\n👤 *సిబ్బంది పేరు:* ${item.staffName}\n📂 *అర్జీ రకం :* ${item.appType}\n👤 *అర్జిదారుని పేరు :* ${item.applicantName}\n📄 *రిఫరెన్స్ నంబర్:* ${item.refNo}\n📅 *పరిష్కార గడువు తేదీ:* ${item.dueDate ? item.dueDate.replace('T', ' ') : 'N/A'}\n\n${reminderNote}`;
@@ -590,6 +630,7 @@
         dispatchToWhatsApp(item.staffPhone, generateMessageText(item, false));
         document.getElementById('dispatchForm').reset();
         applyPresetDays(3);
+        lockDispatchForm(); // Save avvagane security kosam form auto-lock avthundi
         alert('ఆదేశాలు విజయవంతంగా జారీ చేయబడ్డాయి & క్లౌడ్‌లో భద్రపరచబడ్డాయి.');
       } catch (err) {
         console.error("Save Error:", err);
@@ -597,7 +638,7 @@
       }
     });
 
-    // Reminder Trigger (Tracks and increments reminder count)
+    // Reminder Trigger
     async function triggerReminderByDocId(docId) {
       if (!docId) {
         alert("రికార్డు గుర్తించబడలేదు.");
@@ -764,7 +805,6 @@
         const isLapsingSoon = (!isClosed && !isOverdue && (dueTime - now) <= (24 * 60 * 60 * 1000));
         const remCount = parseInt(r.reminderCount) || 0;
 
-        // రిమైండర్ కౌంట్ మరియు సమయం వివరాలు
         const reminderText = (remCount > 0 && r.lastReminderAt) 
           ? `<div class="flex flex-col items-end gap-0.5 mt-1">
                <span class="inline-flex items-center gap-1 text-[11px] font-black text-rose-700 bg-rose-50 px-2 py-0.5 rounded-md border border-rose-200">
